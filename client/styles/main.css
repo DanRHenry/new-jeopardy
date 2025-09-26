@@ -1,0 +1,207 @@
+body {
+  margin: 0;
+}
+
+/*! Title Screen */
+#titleBody {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/*! Teacher Login  */
+
+/*! Create Game Page  */
+
+#mainContent > 
+
+#createGameContent {
+  min-height: fit-content;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+#questionAndAnswerInputForm {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  /* display: grid; */
+  /* grid-template-columns: repeat(5, 20%); */
+  /* padding-left: 5%; */
+  /* padding-right: 5%; */
+  padding-bottom: 1rem;
+}
+
+#questionAndAnswerInputForm > input,
+#addNewCategorySection > input,
+#addNewCategorySection > textarea {
+  font-size: x-small;
+  border-radius: 0.5rem;
+  text-align: center;
+  min-height: 1.5rem;
+}
+
+#questionAndAnswerInputForm > button {
+  border-radius: 0.5rem;
+}
+#newQuestionAndAnswerContainer,
+#addNewCategorySection, #assembleNewCategorySection {
+  text-align: center;
+  font-weight: bold;
+  border: 1px solid black;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  /* border-radius: 1rem; */
+  background-color: gray;
+  color: white;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+#answerInput,
+#questionInput {
+  border-radius: 0.5rem;
+  height: 2rem;
+  width: 80%;
+  text-indent: 1rem;
+}
+
+#questionInput{
+    margin-bottom: .5rem;
+}
+
+#addNewCategorySection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: hidden;
+  transition: all 1s ease;
+  /* margin-top: 1rem; */
+  /* padding-top: 1rem; */
+  padding-bottom: 1rem;
+  /* height: fit-content; */
+}
+
+#responsesTextBoxInput{
+    margin-bottom: .75rem;
+}
+
+#createNewQuestionAndAnswerHeaders,
+.listingContainer {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  font-weight: bold;
+}
+
+.listingContainerHeaders {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* color: green; */
+  width: 100%;
+  /* padding-top: 0.5rem; */
+  /* padding-bottom: 0.5rem; */
+  /* height: 3rem; */
+  height: 2rem;
+  background-color: gray;
+  /* border-radius: 1rem; */
+  color: white;
+}
+
+.listingContainerHeaders:hover {
+  color: blue;
+}
+
+#checkboxHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#createNewQuestionAndAnswerHeaders > div,
+.listingContainer > div {
+  text-align: center;
+}
+
+.listingContainer {
+  border: 1px solid black;
+  border-bottom: none;
+  font-weight: normal;
+}
+
+.listingContainer:last-child {
+  border-bottom: 1px solid black;
+}
+
+#newQuestionAndAnswerContainer {
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem;
+  padding-bottom: .75rem;
+}
+
+#newQuestionAndAnswerHeader,
+#addNewCategorySectionHeader {
+  padding-top: 0.5rem;
+  padding-bottom: 1rem;
+  width: 100%;
+}
+
+#newQuestionAndAnswerHeader:hover,
+#addNewCategorySectionHeader:hover {
+  color: rgb(204, 204, 204);
+  cursor: pointer;
+}
+
+#addNewCategorySectionHeader {
+  padding-top: 1rem;
+}
+
+.categoryHolder{
+    height: 2rem;
+    overflow-y: hidden;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    /* border-radius: 1rem; */
+    border: 1px solid black;
+    margin-bottom: 1rem;
+}
+
+.categoryHolder:first-child {
+  /* color: purple; */
+  /* background-color: blue; */
+}
+
+#availableGamesSection{
+    height: fit-content;
+    background-color: gray;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    color: white;
+}
+
+#availableGamesSectionHeader{
+    text-align: center;
+}
+
+#assembleNewCategorySection{
+    color: white;
+    background-color: gray;
+    border-bottom-right-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+}
+
+/*! Question Listing Window */
+
+#questionListingWindow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: gray;
+  transition: all 0.5s ease;
+  opacity: 0;
+}

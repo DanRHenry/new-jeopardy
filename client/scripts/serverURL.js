@@ -1,0 +1,1 @@
+export const serverURL = "http://127.0.0.1:3350/api/new-jeopardy"
