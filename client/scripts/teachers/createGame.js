@@ -1,20 +1,22 @@
-import { buildExistingQuestionsAndAnswersSection } from "./createGameFunctions/buildExistingQuestionsAndAnswersSection.js";
+import { buildExistingQuestionsAndAnswersSection } from "./createGameFunctions/buildSections/buildExistingQuestionsAndAnswersSection.js";
 import { submitNewQuestionAndAnswer } from "./createGameFunctions/crud/submitNewQuestionAndAnswer.js";
-import { buildAddNewCategorySection } from "./createGameFunctions/buildAddNewCategorySection.js";
-import { buildChooseAClassSection } from "./createGameFunctions/buildChooseAClassSection.js";
-import { buildGameplayCategoriesSection } from "./createGameFunctions/buildGameplayCategoriesSection.js";
-import { buildAvailableGamesSection } from "./createGameFunctions/buildAvailableGamesSection.js";
-import { buildAssembleNewCategorySection } from "./createGameFunctions/buildAssembleNewCategorySection.js";
-import { openAndClose } from "./createGameFunctions/openAndClose.js";
+import { buildAddNewCategorySection } from "./createGameFunctions/buildSections/buildAddNewCategorySection.js";
+import { buildChooseAClassSection } from "./createGameFunctions/buildSections/buildChooseAClassSection.js";
+import { buildGameplayCategoriesSection } from "./createGameFunctions/buildSections/buildGameplayCategoriesSection.js";
+import { buildAvailableGamesSection } from "./createGameFunctions/buildSections/buildAvailableGamesSection.js";
+import { buildAssembleNewCategorySection } from "./createGameFunctions/buildSections/buildAssembleNewCategorySection.js";
+import { openAndClose } from "./createGameFunctions/generalPageControlFunctions/openAndClose.js";
 
 export async function createGame() {
+  let availableCategoriesArray = []
+
   const mainContent = document.getElementById("mainContent");
   mainContent.innerHTML = "";
 
   const createGameContent = document.createElement("div");
   createGameContent.id = "createGameContent";
 
-  console.log("creating game as a teacher");
+  // console.log("creating game as a teacher");
 
   const newQuestionAndAnswerContainer = document.createElement("div");
   newQuestionAndAnswerContainer.id = "newQuestionAndAnswerContainer";
@@ -24,7 +26,7 @@ export async function createGame() {
     newQuestionAndAnswerHeader.innerText = "Create a new question";
     newQuestionAndAnswerHeader.id = "newQuestionAndAnswerHeader";
     newQuestionAndAnswerHeader.addEventListener("click", () => {
-      console.log("click");
+      // console.log("click");
       openAndClose("newQuestionAndAnswerContainer","2rem");
     });
 
@@ -32,6 +34,7 @@ export async function createGame() {
     questionAndAnswerInputForm.id = "questionAndAnswerInputForm";
     questionAndAnswerInputForm.onsubmit = async function (e) {
       e.preventDefault();
+      // console.log("submitting")
       await submitNewQuestionAndAnswer(
         this.defaultCategoryInput.value,
         this.defaultClassInput.value,
@@ -65,39 +68,42 @@ export async function createGame() {
 
     const submitBtn = document.createElement("button");
     submitBtn.innerText = "Submit";
+    submitBtn.type = "submit"
 
-    questionAndAnswerInputForm.append(defaultClassInput, defaultCategoryInput);
+    questionAndAnswerInputForm.append(defaultClassInput, defaultCategoryInput,      answerInput,
+      questionInput,
+      submitBtn);
 
     newQuestionAndAnswerContainer.append(
       newQuestionAndAnswerHeader,
       questionAndAnswerInputForm,
-      answerInput,
-      questionInput,
-      submitBtn
     );
 
     createGameContent.append(newQuestionAndAnswerContainer);
 
     const createGameContentSection = document.createElement("div")
     createGameContentSection.id = "createGameContentSection"
-    mainContent.append(createGameContentSection);
-    createGameContentSection.append(createGameContent)
     const existingGames = document.createElement("div");
     existingGames.id = "existingGames";
     existingGames.innerText = "Existing Games";
+
+    mainContent.append(createGameContentSection);
+    createGameContentSection.append(createGameContent)
+
   }
 
   buildNewQuestionAndAnswerSection();
 
-  buildExistingQuestionsAndAnswersSection();
+  const gameArray = []
+  await buildExistingQuestionsAndAnswersSection(gameArray);
 
-  buildAddNewCategorySection();
+  await buildAddNewCategorySection();
 
   // buildChooseAClassSection()
 
-  buildGameplayCategoriesSection();
+  await buildGameplayCategoriesSection(availableCategoriesArray);
 
-  buildAvailableGamesSection();
-
+  
+  await buildAvailableGamesSection();
   buildAssembleNewCategorySection();
 }

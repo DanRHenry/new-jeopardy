@@ -8,7 +8,7 @@ export function buildAssembleNewCategorySection() {
 
   const assembleNewCategorySectionHeader = document.createElement("div");
   assembleNewCategorySectionHeader.id = "assembleNewCategorySectionHeader";
-  assembleNewCategorySectionHeader.innerText = "New Category";
+  assembleNewCategorySectionHeader.innerText = "Build Game Category";
 
   const assembleNewCategorySectionOL = document.createElement("ol");
   assembleNewCategorySectionOL.id = "assembleNewCategorySectionOL";

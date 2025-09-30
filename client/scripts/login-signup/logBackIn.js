@@ -25,12 +25,12 @@ export async function logBackIn(email, token) {
     );
     const res = await data.json();
 
-    console.log("logged back in")
-    console.log(res.message)
+    // console.log("logged back in")
+    // console.log(res.message)
     const message = await res.message
 
     const response = res
-    console.log("response: ",response)
+    // console.log("response: ",response)
     if (message === "Found!") {
     //   console.log(res.message, res.body);
             const logoutBtn = document.createElement("button")
@@ -46,7 +46,7 @@ export async function logBackIn(email, token) {
     
                         document.getElementById("mainContent").before(logoutBtn)
       if (res.user.role === "teacher") {
-        console.log(res.token);
+        // console.log(res.token);
         sessionStorage.email = res.user.email;
         sessionStorage.role = res.user.role;
         createGame();

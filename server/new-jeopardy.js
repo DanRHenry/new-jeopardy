@@ -26,7 +26,8 @@ const bodyParser = require("body-parser");
 // ---------------------- Controllers: -------------------
 const user = require("./controllers/user.controller");
 const questionAndAnswer = require("./controllers/questionAndAnswer.controller")
-
+const category = require("./controllers/category.controller")
+const games = require("./controllers/games.controller")
 
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -52,6 +53,8 @@ app.use("/api/new-jeopardy/user", user);
 
 app.use(requireValidation)
 app.use("/api/new-jeopardy/questionAndAnswer",questionAndAnswer)
+app.use("/api/new-jeopardy/category", category)
+app.use("/api/new-jeopardy/games", games)
 
 
 app.get("/", (req, res) => {

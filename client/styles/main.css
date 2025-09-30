@@ -13,7 +13,10 @@ body {
 
 /*! Create Game Page  */
 
-#mainContent > 
+#mainContent{
+    overflow-x: hidden;
+}
+/* #mainContent >  */
 
 #createGameContent {
   min-height: fit-content;
@@ -24,14 +27,13 @@ body {
 #questionAndAnswerInputForm {
   display: flex;
   align-items: center;
+  flex-direction: column;
   justify-content: space-evenly;
-  /* display: grid; */
-  /* grid-template-columns: repeat(5, 20%); */
-  /* padding-left: 5%; */
-  /* padding-right: 5%; */
-  padding-bottom: 1rem;
 }
 
+#questionAndAnswerInputForm > input {
+    margin-top: .5em;
+}
 #questionAndAnswerInputForm > input,
 #addNewCategorySection > input,
 #addNewCategorySection > textarea {
@@ -41,17 +43,20 @@ body {
   min-height: 1.5rem;
 }
 
+#addNewCategorySection > input{
+    width: 15em;
+    max-width: 80%;
+}
+
 #questionAndAnswerInputForm > button {
   border-radius: 0.5rem;
+  padding: .2em .5em .2em .5em;
 }
 #newQuestionAndAnswerContainer,
-#addNewCategorySection, #assembleNewCategorySection {
+#addNewCategorySection, #assembleNewCategorySection, #gameplayCategoriesSection {
   text-align: center;
   font-weight: bold;
   border: 1px solid black;
-  border-bottom-left-radius: 1rem;
-  border-bottom-right-radius: 1rem;
-  /* border-radius: 1rem; */
   background-color: gray;
   color: white;
   text-align: center;
@@ -61,14 +66,28 @@ body {
 #answerInput,
 #questionInput {
   border-radius: 0.5rem;
-  height: 2rem;
-  width: 80%;
-  text-indent: 1rem;
+  width: 100%;
 }
 
 #questionInput{
     margin-bottom: .5rem;
 }
+
+#createGameContentSection, #assembleNewCategorySection, #existingQuestionsAndAnswersSection, #availableGamesSection, #gameplayCategoriesSection{
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+#existingQuestionsAndAnswersContainer{
+    padding: 1rem;
+    background-color: gray;
+    color: white;
+}
+
+.existingQuestionCheckboxes{
+    height: 1rem;
+}
+
 
 #addNewCategorySection {
   display: flex;
@@ -76,10 +95,14 @@ body {
   align-items: center;
   overflow-y: hidden;
   transition: all 1s ease;
-  /* margin-top: 1rem; */
-  /* padding-top: 1rem; */
   padding-bottom: 1rem;
-  /* height: fit-content; */
+  gap: 1rem;
+}
+
+#availableGamesSection{
+    padding: .5rem;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
 }
 
 #responsesTextBoxInput{
@@ -93,23 +116,25 @@ body {
   font-weight: bold;
 }
 
-.listingContainerHeaders {
+
+.categoryHolderHeadings {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* color: green; */
   width: 100%;
-  /* padding-top: 0.5rem; */
-  /* padding-bottom: 0.5rem; */
-  /* height: 3rem; */
   height: 2rem;
-  background-color: gray;
-  /* border-radius: 1rem; */
+  text-decoration: underline;
+  /* background-color: rgb(83, 83, 83); */
   color: white;
 }
 
-.listingContainerHeaders:hover {
-  color: blue;
+.categoryListings {
+    /* width: 90%; */
+    background-color: gray;
+    color: white;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    /* padding-left: 10%; */
 }
 
 #checkboxHeader {
@@ -162,23 +187,23 @@ body {
 .categoryHolder{
     height: 2rem;
     overflow-y: hidden;
-    border-bottom-left-radius: 1rem;
-    border-bottom-right-radius: 1rem;
-    /* border-radius: 1rem; */
     border: 1px solid black;
     margin-bottom: 1rem;
 }
 
-.categoryHolder:first-child {
-  /* color: purple; */
-  /* background-color: blue; */
+#assembleNewCategorySectionOL{
+    padding: .5rem;
+}
+
+#assembleNewCategorySectionOL > li{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    text-align: left;
 }
 
 #availableGamesSection{
     height: fit-content;
     background-color: gray;
-    border-bottom-left-radius: 1rem;
-    border-bottom-right-radius: 1rem;
     color: white;
 }
 
@@ -189,11 +214,99 @@ body {
 #assembleNewCategorySection{
     color: white;
     background-color: gray;
-    border-bottom-right-radius: 1rem;
-    border-bottom-left-radius: 1rem;
+    padding: .5rem;
 }
 
+#newClassAndCategorySection{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+}
+
+#newClassAndCategorySection > * {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+#newClassAndCategorySection > * > input {
+    max-width: 10em;
+    margin-left: 1rem;
+}
+
+#promptsTextBoxInput, #responsesTextBoxInput{
+    width: 80%;
+    height: 5rem;
+    font-size: large;
+    resize: vertical;
+    /* background-color: red; */
+}
+
+#classNameAndLabel, #unitNameAndLabel{
+    /* display: flex; */
+    /* align-items: center; */
+    /* width: 80%; */
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+#questionAndAnswerInputForm{
+    width: 80%;
+}
+
+#classAndUnitLine {
+    width: 80%;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    /* flex-direction: column; */
+}
+
+#classAndUnitLine > div > input{
+    border-radius: .5rem;
+    height: 1.5rem;
+}
+
+#gameplayCategoriesSection{
+    min-height: 1rem;
+}
+
+#categoryHeadersRow, .availableCategoriesRows{
+        display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    /* width: 100%; */
+    /* justify-content: space-evenly; */
+    /* align-items: center; */
+}
+
+.availableCategoriesRows > * {
+    width: 90%;
+}
+
+#newClassNameInput, #newCategoryNameInput{
+    width: 100%;
+}
 /*! Question Listing Window */
+
+.availableGamesTitleRows{
+display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.availableGamesTitleRows > * {
+    text-align: center;
+}
+
+.availableGameRows{
+    /* background-color: blue; */
+    display: grid;
+    grid-template-columns: 1f 1fr;
+    border-top: 1px solid black;
+    margin-bottom: 1rem;
+}
 
 #questionListingWindow {
   position: absolute;

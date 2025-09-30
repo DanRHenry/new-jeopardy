@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const Category = new mongoose.Schema({
+const CategorySchema = new mongoose.Schema({
     className: {
         type: String,
         required: true,
@@ -9,12 +9,12 @@ const Category = new mongoose.Schema({
         type: String,
         required: true
     },
-    questions: {
-        type: Object,
+    prompts: {
+        type: Array,
         required: true,
     },
-    answers: {
-        type: Object,
+    responses: {
+        type: Array,
         required: true,
     },
     category: {
@@ -23,4 +23,4 @@ const Category = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model("Category", Category);
+module.exports = mongoose.model("Category", CategorySchema);

@@ -1,4 +1,4 @@
-import { openAndClose } from "./openAndClose.js";
+import { openAndClose } from "../generalPageControlFunctions/openAndClose.js";
 
 export async function buildAddNewCategorySection() {
   const addNewCategorySection = document.createElement("div");
@@ -23,6 +23,11 @@ export async function buildAddNewCategorySection() {
   classNameInput.id = "classNameInput";
   classNameInput.name = "classNameInput";
 
+  const classNameAndLabel = document.createElement("div")
+  classNameAndLabel.id = "classNameAndLabel"
+  classNameAndLabel.append(classNameLabel, classNameInput)
+
+
   const unitNameLabel = document.createElement("div");
   unitNameLabel.setAttribute("for", "unitNameInput");
   unitNameLabel.innerText = "Unit Name:";
@@ -30,6 +35,10 @@ export async function buildAddNewCategorySection() {
   const unitNameInput = document.createElement("input");
   unitNameInput.id = "unitNameInput";
   unitNameInput.name = "unitNameInput";
+
+  const unitNameAndLabel = document.createElement("div")
+  unitNameAndLabel.id = "unitNameAndLabel"
+  unitNameAndLabel.append(unitNameLabel, unitNameInput)
 
   const categoryLabel = document.createElement("div");
   categoryLabel.setAttribute("for", "categoryInput");
@@ -61,12 +70,15 @@ export async function buildAddNewCategorySection() {
     console.log("clicked submit");
   });
 
+const classAndUnitLine = document.createElement("div")
+classAndUnitLine.id = "classAndUnitLine"
+
+
+classAndUnitLine.append(classNameAndLabel, unitNameAndLabel)
+
   addNewCategorySection.append(
     addNewCategorySectionHeader,
-    classNameLabel,
-    classNameInput,
-    unitNameLabel,
-    unitNameInput,
+    classAndUnitLine,
     categoryLabel,
     categoryInput,
     promptsTextBoxLabel,
