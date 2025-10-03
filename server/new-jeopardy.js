@@ -3,39 +3,25 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const server = require("http").createServer(app);
-const WebSocket = require("ws");
 const PORT = process.env.PORT;
 
-const wss = new WebSocket.Server({ server: server });
+const openWebsocket = require("./websocket_functions/openNewWebsocket")
 
-wss.on("connection", function connection(ws) {
-  console.log("A new client connected");
-  ws.send("Welcome new client");
-  ws.on("message", function incoming(message) {
-    console.log("received: %s", message);
-        wss.clients.forEach(function each(client) {
-          if(client !== ws && client.readyState === WebSocket.OPEN) {
-              client.send("" + message)
-          }
-      })
-  });
-});
+openWebsocket(server)
 
 const bodyParser = require("body-parser");
 
 // ---------------------- Controllers: -------------------
 const user = require("./controllers/user.controller");
-const questionAndAnswer = require("./controllers/questionAndAnswer.controller")
-const category = require("./controllers/category.controller")
-const games = require("./controllers/games.controller")
+const questionAndAnswer = require("./controllers/questionAndAnswer.controller");
+const category = require("./controllers/category.controller");
+const games = require("./controllers/games.controller");
 
 const cors = require("cors");
 const mongoose = require("mongoose");
 const MONGO = process.env.MONGODB;
 
-mongoose.connect(
-  `${MONGO}/new-jeopardy`,
-);
+mongoose.connect(`${MONGO}/new-jeopardy`);
 
 const db = mongoose.connection;
 
@@ -46,23 +32,21 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const requireValidation = require("./middleware/validate-session");
-
+// const openNewWebsocket = require("./websocket_functions/openNewWebsocket");
 
 // ----------------------- Endpoints -------------------
 app.use("/api/new-jeopardy/user", user);
 
-app.use(requireValidation)
-app.use("/api/new-jeopardy/questionAndAnswer",questionAndAnswer)
-app.use("/api/new-jeopardy/category", category)
-app.use("/api/new-jeopardy/games", games)
-
+app.use(requireValidation);
+app.use("/api/new-jeopardy/questionAndAnswer", questionAndAnswer);
+app.use("/api/new-jeopardy/category", category);
+app.use("/api/new-jeopardy/games", games);
 
 app.get("/", (req, res) => {
   res.send("it's ALIVE");
 });
 
-
 // Changed from app.listen to server.listen when implementing websocket
-app.listen(PORT, () =>
+server.listen(PORT, () =>
   console.log(`The jeopardyServer is running on Port: ${PORT}`)
 );

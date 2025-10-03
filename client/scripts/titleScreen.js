@@ -14,6 +14,10 @@ export async function titleScreen() {
       console.log("email: ",email, "role: ",role, "token: ",token)
       logBackIn(email, token)
     }
+    else if (email && role === "student" && token) {
+      console.log("email: ",email, "role: ",role, "token: ",token)
+      logBackIn(email, token)
+    }
   })()
 
   const mainContent = document.getElementById("mainContent");

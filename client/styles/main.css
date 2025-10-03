@@ -318,3 +318,33 @@ display: grid;
   transition: all 0.5s ease;
   opacity: 0;
 }
+
+
+/*!  Pending Game Window Section  */
+
+#pendingGameWindow{
+    width: 100vw;
+    height: calc(100vh - 2rem);
+    background-color: gray;
+    border: 2px solid white;
+    border-radius: .5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#studentListSection {
+    background-color: white;
+    height: 80%;
+    width: 80%;
+    border-radius: .25rem;
+    text-align: center;
+    padding: .5rem;
+}
+
+#studentEmailsHeader{
+    color: black;
+    /* text-align: center; */
+    font-size: larger;
+    font-weight: bold;
+}
