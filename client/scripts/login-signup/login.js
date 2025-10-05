@@ -32,6 +32,9 @@ export async function login(email, password, role) {
         sessionStorage.removeItem("role");
         sessionStorage.removeItem("teacherEmail");
         sessionStorage.removeItem("studentList");
+        sessionStorage.removeItem("className");
+        sessionStorage.removeItem("categoriesArray");
+        sessionStorage.removeItem("studentList");
         logoutBtn.remove();
         titleScreen();
       });
