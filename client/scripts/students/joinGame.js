@@ -40,7 +40,7 @@ export function joinGame() {
 
           if (data.cueToStart) {
             console.log(data.cueToStart);
-            beginGame(JSON.parse(sessionStorage.categoriesArray), socket);
+            beginGame(JSON.parse(sessionStorage.categoriesArray), socket, data.className, data.gameName);
           }
 
           if (data.squareClicked) {
@@ -81,6 +81,22 @@ export function joinGame() {
                 document.getElementById("promptResponseWindow")?.remove();
                 document.getElementById("backgroundOverlay")?.remove();
               }, 3000);
+            }
+          }
+
+          if (data.correctPlayerBox) {
+            console.log(data);
+
+            if (document.getElementById(data.correctPlayerBox)) {
+              document.getElementById(data.correctPlayerBox).innerText = data.updatedScore
+            }
+          }
+
+            if (data.incorrectPlayerBox) {
+            console.log(data);
+
+            if (document.getElementById(data.incorrectPlayerBox)) {
+              document.getElementById(data.incorrectPlayerBox).innerText = data.updatedScore
             }
           }
 

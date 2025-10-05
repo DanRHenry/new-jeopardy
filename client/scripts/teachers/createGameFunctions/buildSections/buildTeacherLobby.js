@@ -1,7 +1,6 @@
-export async function buildTeacherLobby() {
+export async function buildTeacherLobby(className, categoriesArray) {
     const mainContent = document.getElementById("mainContent")
     mainContent.innerHTML = ""
-
 
     const pendingGameWindow = document.createElement("div")
     pendingGameWindow.id = "pendingGameWindow";

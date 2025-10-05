@@ -1,10 +1,10 @@
 import { buildTeacherLobby } from "../buildTeacherLobby.js";
 import { openTeacherSideWebsocket } from "../../../openTeacherSideWebsocket.js";
 
-export async function startGame(className, email, categoriesArray) {
-  buildTeacherLobby();
+export async function startGame(className, email, categoriesArray, gameNameInput) {
+  buildTeacherLobby(className, categoriesArray);
 
   sessionStorage.studentList = JSON.stringify([]);
 
-  openTeacherSideWebsocket(className, email, categoriesArray)
+  openTeacherSideWebsocket(className, email, categoriesArray, gameNameInput)
 }

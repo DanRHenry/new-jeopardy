@@ -1,44 +1,42 @@
 const { sendStudentEmail } = require("./sendStudentEmail");
 const { sendTeacherEmail } = require("./sendTeacherEmail");
 const { sendClassName } = require("./sendClassName");
-const {sendCategoriesArray} = require("./sendCategoriesArray")
+const { sendCategoriesArray } = require("./sendCategoriesArray");
 
 const openNewWebsocket = (server) => {
   const WebSocket = require("ws");
   const wss = new WebSocket.Server({ server: server });
 
   wss.on("connection", function connection(ws) {
-
     ws.on("error", console.error);
 
     ws.on("message", function message(data) {
-
       wss.clients.forEach(function each(client) {
-        client.send(JSON.stringify({"WelcomeMessage": "WelcomeMessage"}))
+        client.send(JSON.stringify({ WelcomeMessage: "WelcomeMessage" }));
         if (client !== ws && client.readyState === WebSocket.OPEN) {
           client.send(JSON.stringify({ "data: ": "Hello" }));
           const info = JSON.parse(data);
 
           if (info.teacherEmail) {
-            sendTeacherEmail(info.teacherEmail, ws, client)
+            sendTeacherEmail(info.teacherEmail, ws, client);
           }
 
           if (info.studentEmail) {
-            sendStudentEmail(info.studentEmail, ws, client)
+            sendStudentEmail(info.studentEmail, ws, client);
           }
 
           if (info.className) {
-            sendClassName(info.className, ws, client)
+            sendClassName(info.className, ws, client);
           }
 
           if (info.categoriesArray) {
-            sendCategoriesArray(info.categoriesArray, ws, client)
+            sendCategoriesArray(info.categoriesArray, ws, client);
           }
 
           if (info.squareClicked) {
-            console.log("clicked square: ",info.squareClicked)
-            ws.send(JSON.stringify({squareClicked: info.squareClicked}))
-            client.send(JSON.stringify({squareClicked: info.squareClicked}))
+            console.log("clicked square: ", info.squareClicked);
+            ws.send(JSON.stringify({ squareClicked: info.squareClicked }));
+            client.send(JSON.stringify({ squareClicked: info.squareClicked }));
           }
 
           // if (info.activePrompt) {
@@ -66,19 +64,31 @@ const openNewWebsocket = (server) => {
           }
 
           if (info.correctAnswer) {
-            client.send(JSON.stringify(info))
-            ws.send(JSON.stringify(info))
+            client.send(JSON.stringify(info));
+            ws.send(JSON.stringify(info));
           }
 
           if (info.incorrectAnswer) {
-            client.send(JSON.stringify(info))
-            ws.send(JSON.stringify(info))
+            client.send(JSON.stringify(info));
+            ws.send(JSON.stringify(info));
           }
 
           if (info.showResponse) {
-            console.log("info: ",info)
-            client.send(JSON.stringify(info))
-            ws.send(JSON.stringify(info))
+            console.log("info: ", info);
+            client.send(JSON.stringify(info));
+            ws.send(JSON.stringify(info));
+          }
+
+          if (info.correctPlayerBox) {
+            console.log("info: ", info);
+            client.send(JSON.stringify(info));
+            ws.send(JSON.stringify(info));
+          }
+
+          if (info.incorrectPlayerBox) {
+            console.log("info: ", info);
+            client.send(JSON.stringify(info));
+            ws.send(JSON.stringify(info));
           }
         }
       });

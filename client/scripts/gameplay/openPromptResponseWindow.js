@@ -1,6 +1,6 @@
 import { handleBuzzIn } from "./handlers/handleBuzzIn.js"
 
-export function openPromptResponseWindow(activePrompt, activeResponse, socket, activeCategory) {
+export function openPromptResponseWindow(activePrompt, activeResponse, socket, activeCategory, score) {
 
     console.log("activePrompt:",activePrompt)
     // console.log("activeResponse: ",activeResponse)
@@ -30,7 +30,7 @@ export function openPromptResponseWindow(activePrompt, activeResponse, socket, a
     buzzInBtn.id = "buzzInBtn"
     buzzInBtn.innerText = "Buzz"
     buzzInBtn.addEventListener("click", () => {
-        handleBuzzIn(activePrompt, activeResponse, socket)
+        handleBuzzIn(activePrompt, activeResponse, socket, score)
     })
 
 

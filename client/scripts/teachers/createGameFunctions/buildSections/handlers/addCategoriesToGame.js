@@ -10,6 +10,8 @@ export async function addCategoriesToGame(
   }
     const availableGamesTitleRow = document.createElement("div");
     availableGamesTitleRow.className = "availableGamesTitleRows";
+    availableGamesTitleRow.classList.add("gameTitles"); 
+
   for (let i = 0; i < availableCategoriesArray.length; i++) {
     const row = document.createElement("div");
     row.className = "availableGameRows";
@@ -65,6 +67,8 @@ export async function addCategoriesToGame(
     const gameName = document.createElement("span");
     gameName.innerText = gameNameInput;
 
+    console.log(gameNameInput)
+
 const startGameBtn = document.createElement("button");
 startGameBtn.id = "startGameBtn";
 startGameBtn.innerText = "Start This Game";
@@ -73,7 +77,7 @@ startGameBtn.addEventListener("click", () => {
   console.log("questions & answers: ", availableCategoriesArray);
 
   console.log("className: ",className)
-  startGame(className.innerText, sessionStorage.email,availableCategoriesArray)
+  startGame(className.innerText, sessionStorage.email,availableCategoriesArray, gameNameInput)
 });
 availableGamesTitleRow.append(className, gameName, startGameBtn);
 document
