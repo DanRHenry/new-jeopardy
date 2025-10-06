@@ -1,5 +1,5 @@
 export function handleBuzzIn(activePrompt, activeResponse, socket, score) {
-  console.log("buzzing in");
+  // console.log("buzzing in");
 
   socket.send(JSON.stringify({ buzzIn: sessionStorage.email }));
 

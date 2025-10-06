@@ -2,7 +2,7 @@ import { handleBuzzIn } from "./handlers/handleBuzzIn.js"
 
 export function openPromptResponseWindow(activePrompt, activeResponse, socket, activeCategory, score) {
 
-    console.log("activePrompt:",activePrompt)
+    // console.log("activePrompt:",activePrompt)
     // console.log("activeResponse: ",activeResponse)
 
     const backgroundOverlay = document.createElement("div")
@@ -42,7 +42,7 @@ export function openPromptResponseWindow(activePrompt, activeResponse, socket, a
             promptResponseWindow.append(buzzInBtn)
         }
 
-        console.log("role: ",sessionStorage.role)
+        // console.log("role: ",sessionStorage.role)
 
 
         if (sessionStorage.role == "teacher") {
@@ -60,6 +60,6 @@ export function openPromptResponseWindow(activePrompt, activeResponse, socket, a
     function showResponse() {
 
             socket.send(JSON.stringify({"showResponse": "true", "activePrompt": activePrompt, "activeResponse": activeResponse}))
-            document.getElementById("showResponseBtn").removeEventListener("click", showResponse)
+            document.getElementById("showResponseBtn")?.removeEventListener("click", showResponse)
         }
 }

@@ -39,16 +39,6 @@ const openNewWebsocket = (server) => {
             client.send(JSON.stringify({ squareClicked: info.squareClicked }));
           }
 
-          // if (info.activePrompt) {
-          //   ws.send(JSON.stringify({activePrompt: info.activePrompt}))
-          //   client.send(JSON.stringify({activePrompt: info.activePrompt}))
-          // }
-
-          // if (info.activeResponse) {
-          //     ws.send(JSON.stringify({activeResponse: info.activeResponse}))
-          //   client.send(JSON.stringify({activeResponse: info.activeResponse}))
-          // }
-
           if (info.requestingGameInfo) {
             ws.send("info request received");
             client.send("info request received");
@@ -79,17 +69,6 @@ const openNewWebsocket = (server) => {
             ws.send(JSON.stringify(info));
           }
 
-          if (info.correctPlayerBox) {
-            console.log("info: ", info);
-            client.send(JSON.stringify(info));
-            ws.send(JSON.stringify(info));
-          }
-
-          if (info.incorrectPlayerBox) {
-            console.log("info: ", info);
-            client.send(JSON.stringify(info));
-            ws.send(JSON.stringify(info));
-          }
           if (info.playCorrectSound) {
             ws.send(JSON.stringify(info))
           }
@@ -99,10 +78,6 @@ const openNewWebsocket = (server) => {
           }
         }
       });
-
-      // if (JSON.parse(data).squareClicked) {
-      //   ws.send(JSON.stringify(data))
-      // }
     });
   });
 };

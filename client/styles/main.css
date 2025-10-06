@@ -494,3 +494,7 @@ body {
   color: white;
   /* display: flex; */
 }
+
+#playerScoreSection{
+  text-align: center;
+}

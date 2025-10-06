@@ -11,11 +11,11 @@ export async function titleScreen() {
     const token = sessionStorage.token
 
     if (email && role === "teacher" && token) {
-      console.log("email: ",email, "role: ",role, "token: ",token)
+      // console.log("email: ",email, "role: ",role, "token: ",token)
       logBackIn(email, token)
     }
     else if (email && role === "student" && token) {
-      console.log("email: ",email, "role: ",role, "token: ",token)
+      // console.log("email: ",email, "role: ",role, "token: ",token)
       logBackIn(email, token)
     }
   })()

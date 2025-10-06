@@ -6,7 +6,7 @@ import { handleBuzzIn } from "../gameplay/handlers/handleBuzzIn.js";
 export function joinGame() {
   const mainContent = document.getElementById("mainContent");
   mainContent.innerHTML = "";
-  console.log("joining game as a student");
+  // console.log("joining game as a student");
   const emailObj = JSON.stringify({
     studentEmail: sessionStorage.email,
   });
@@ -28,18 +28,18 @@ export function joinGame() {
           }
           if (data.className) {
             sessionStorage.className = JSON.stringify(data.className);
-            console.log(data.className);
+            // console.log(data.className);
           }
 
           if (data.categoriesArray) {
-            console.log(data.categoriesArray);
+            // console.log(data.categoriesArray);
             sessionStorage.categoriesArray = JSON.stringify(
               data.categoriesArray
             );
           }
 
           if (data.cueToStart) {
-            console.log(data.cueToStart);
+            // console.log(data.cueToStart);
             beginGame(JSON.parse(sessionStorage.categoriesArray), socket, data.className, data.gameName);
           }
 
@@ -47,16 +47,8 @@ export function joinGame() {
             handleClickedSquare(data, socket);
           }
 
-          if (data.activePrompt) {
-            console.log("active prompt:", data.activePrompt);
-          }
-
-          if (data.activeResponse) {
-            console.log("activeResponse: ", data.activeResponse);
-          }
-
           if (data.buzzIn) {
-            console.log(data);
+            // console.log(data);
             document.getElementById(
               "studentAnswering"
             ).innerText = `${data.buzzIn} is answering...`;
@@ -84,31 +76,31 @@ export function joinGame() {
             }
           }
 
-          if (data.correctPlayerBox) {
-            console.log(data);
+          // if (data.correctPlayerBox) {
+          //   console.log(data);
 
-            if (document.getElementById(data.correctPlayerBox)) {
-              document.getElementById(data.correctPlayerBox).innerText = data.updatedScore
-            }
-          }
+          //   if (document.getElementById(data.correctPlayerBox)) {
+          //     document.getElementById(data.correctPlayerBox).innerText = data.updatedScore
+          //   }
+          // }
 
-            if (data.incorrectPlayerBox) {
-            console.log(data);
+          //   if (data.incorrectPlayerBox) {
+          //   console.log(data);
 
-            if (document.getElementById(data.incorrectPlayerBox)) {
-              document.getElementById(data.incorrectPlayerBox).innerText = data.updatedScore
-            }
-          }
+          //   if (document.getElementById(data.incorrectPlayerBox)) {
+          //     document.getElementById(data.incorrectPlayerBox).innerText = data.updatedScore
+          //   }
+          // }
 
           if (data.incorrectAnswer) {
-            console.log(sessionStorage.email);
-            console.log(data.playerName);
+            // console.log(sessionStorage.email);
+            // console.log(data.playerName);
 
             if (data.playerName === sessionStorage.email) {
               sessionStorage.failedGuess = sessionStorage.email;
             }
 
-            console.log("incorrect answer was guessed: ", data);
+            // console.log("incorrect answer was guessed: ", data);
 
             const incorrectNotification = document.createElement("div");
             incorrectNotification.id = "incorrectNotification";
@@ -130,7 +122,7 @@ export function joinGame() {
                 buzzInBtn.id = "buzzInBtn";
                 buzzInBtn.innerText = "Buzz";
                 buzzInBtn.addEventListener("click", () => {
-                  handleBuzzIn(data.activePrompt, data.activeResponse, socket);
+                  handleBuzzIn(data.activePrompt, data.activeResponse, socket, data.score);
                 });
 
                 document

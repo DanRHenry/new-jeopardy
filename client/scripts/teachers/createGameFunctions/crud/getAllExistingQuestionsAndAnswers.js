@@ -3,7 +3,7 @@ import { serverURL } from "../../../serverURL.js";
 export async function getAllExistingQuestionsAndAnswers() {
 
     const url = `${serverURL}/questionAndAnswer/${sessionStorage.email}`
-    console.log("url: ",url)
+    // console.log("url: ",url)
     try{
         const token = sessionStorage.token;
         const data = await fetch(url, {

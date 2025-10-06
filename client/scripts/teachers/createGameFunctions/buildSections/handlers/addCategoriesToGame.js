@@ -67,16 +67,16 @@ export async function addCategoriesToGame(
     const gameName = document.createElement("span");
     gameName.innerText = gameNameInput;
 
-    console.log(gameNameInput)
+    // console.log(gameNameInput)
 
 const startGameBtn = document.createElement("button");
 startGameBtn.id = "startGameBtn";
 startGameBtn.innerText = "Start This Game";
 startGameBtn.addEventListener("click", () => {
-  console.log("starting game with...");
-  console.log("questions & answers: ", availableCategoriesArray);
+  // console.log("starting game with...");
+  // console.log("questions & answers: ", availableCategoriesArray);
 
-  console.log("className: ",className)
+  // console.log("className: ",className)
   startGame(className.innerText, sessionStorage.email,availableCategoriesArray, gameNameInput)
 });
 availableGamesTitleRow.append(className, gameName, startGameBtn);

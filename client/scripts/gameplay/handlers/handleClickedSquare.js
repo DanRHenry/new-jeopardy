@@ -7,12 +7,12 @@ export function handleClickedSquare(data, socket) {
             const activeCategory = data.squareClicked.activeCategory
 
             const score = square.innerText;
-            console.log(data.squareClicked)
+            // console.log(data.squareClicked)
         // square.style.backgroundColor =
         //   "red";
           square.innerText = ""
 
           openPromptResponseWindow(activePrompt, activeResponse, socket, activeCategory, score)
 
-          console.log("data: ",data)
+        //   console.log("data: ",data)
 }

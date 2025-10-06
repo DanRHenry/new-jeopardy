@@ -18,7 +18,7 @@ export async function buildAvailableGamesSection() {
 
     const allGames = await getAllGames()
 
-    console.log("all games: ",allGames.games)
+    // console.log("all games: ",allGames.games)
 
     for (let i = 0; i < await allGames.games.length; i++) {
         const className = allGames.games[i].className

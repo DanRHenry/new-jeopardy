@@ -1,5 +1,5 @@
 export function buildGameGrid(categoriesArray, socket) {
-  console.log("categoriesArray: ", categoriesArray);
+  // console.log("categoriesArray: ", categoriesArray);
   const gameGrid = document.createElement("div");
   gameGrid.id = "gameGrid";
 
@@ -16,7 +16,7 @@ export function buildGameGrid(categoriesArray, socket) {
     // gameGrid.style.width = "100%";
   }
 
-  console.log(categoriesArray[0].category);
+  // console.log(categoriesArray[0].category);
   for (let i = 0; i < categoriesArray.length; i++) {
     const categorySquare = document.createElement("div");
     categorySquare.className = "categorySquares";
@@ -32,7 +32,7 @@ export function buildGameGrid(categoriesArray, socket) {
       gameSquare.id = `gameSquare${i}_${j}`;
       gameSquare.innerText = (i + 1) * 200;
       gameSquare.addEventListener("click", () => {
-        console.log(categoriesArray[i].category);
+        // console.log(categoriesArray[i].category);
         socket.send(
           JSON.stringify({
             squareClicked: {
@@ -79,7 +79,7 @@ export function buildGameGrid(categoriesArray, socket) {
     }
 
     for (let i = 0; i < document.getElementsByClassName("playerBoxes").length; i++) {
-      console.log('playerbox', i)
+      // console.log('playerbox', i)
       if (document.getElementsByClassName("playerNames")[i]?.innerText.length > 0) {
         // document.getElementsByClassName("playerNames")[i].style.color = "blue"
       }
