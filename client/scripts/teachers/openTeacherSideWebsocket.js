@@ -3,6 +3,7 @@ import { websocketURL } from "../websocketURL.js";
 import { beginGame } from "./createGameFunctions/buildSections/handlers/beginGame.js";
 import { failureListings } from "../gameplay/failureListing.js";
 import { successListings } from "../gameplay/successListing.js";
+import { createGame } from "./createGame.js";
 
 export function openTeacherSideWebsocket(
   className,
@@ -58,7 +59,16 @@ export function openTeacherSideWebsocket(
               beginGame(categoriesArray, socket, className, gameNameInput);
             });
 
-            document.getElementById("studentEmailsHeader").before(beginGameBtn);
+            const backBtn = document.createElement("button")
+            backBtn.id = "backBtn"
+            backBtn.innerText = "Back"
+            backBtn.addEventListener("click", createGame)
+
+            const btnRow = document.createElement("div")
+            btnRow.id = "btnRow"
+
+            btnRow.append(backBtn, beginGameBtn)
+            document.getElementById("studentEmailsHeader").before(btnRow);
           }
         }
       }

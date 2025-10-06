@@ -11,43 +11,9 @@ export function handleBuzzIn(activePrompt, activeResponse, socket, score) {
   responseInputField.placeholder = "type response";
 
   const responseBtn = document.createElement("button");
+  responseBtn.id = "responseBtn"
   responseBtn.innerText = "Submit";
-  responseBtn.addEventListener("click", () => {
-    if (
-      responseInputField.value === null ||
-      responseInputField.value.length === 0
-    ) {
-      return;
-    }
-
-    if (checkResponseToPrompt(responseInputField.value)) {
-      console.log("correct");
-      socket.send(
-        JSON.stringify({
-          correctAnswer: responseInputField.value,
-          playerName: sessionStorage.email,
-          score: score
-        })
-      );
-
-      socket.send(JSON.stringify({playCorrectSound: true}))
-    } else {
-      console.log("incorrect");
-      document.getElementById("studentAnswering").innerText = "";
-      document.getElementById("responseInputRow")?.remove();
-
-      socket.send(
-        JSON.stringify({
-          incorrectAnswer: responseInputField.value,
-          playerName: sessionStorage.email,
-          activePrompt: activePrompt,
-          activeResponse: activeResponse,
-          score: score,
-        })
-      );
-      socket.send(JSON.stringify({playIncorrectSound: true}))
-    }
-  });
+  responseBtn.addEventListener("click", handleResponseSubmitClick);
 
   responseInputRow.append(responseInputField, responseBtn);
   responseInputField.focus();
@@ -75,6 +41,45 @@ export function handleBuzzIn(activePrompt, activeResponse, socket, score) {
       return true;
     } else {
       return false;
+    }
+  }
+
+  function handleResponseSubmitClick () {
+    if (
+      responseInputField.value === null ||
+      responseInputField.value.length === 0
+    ) {
+      return;
+    }
+
+    document.getElementById("responseBtn")?.remove()
+
+    if (checkResponseToPrompt(responseInputField.value)) {
+      console.log("correct");
+      socket.send(
+        JSON.stringify({
+          correctAnswer: responseInputField.value,
+          playerName: sessionStorage.email,
+          score: score
+        })
+      );
+
+      socket.send(JSON.stringify({playCorrectSound: true}))
+    } else {
+      console.log("incorrect");
+      document.getElementById("studentAnswering").innerText = "";
+      document.getElementById("responseInputRow")?.remove();
+
+      socket.send(
+        JSON.stringify({
+          incorrectAnswer: responseInputField.value,
+          playerName: sessionStorage.email,
+          activePrompt: activePrompt,
+          activeResponse: activeResponse,
+          score: score,
+        })
+      );
+      socket.send(JSON.stringify({playIncorrectSound: true}))
     }
   }
 }
