@@ -3,7 +3,15 @@ body {
 }
 
 #logoutBtn {
+  left: 0;
   position: absolute;
+  z-index: 10;
+}
+
+#enableSoundsBtn {
+  right: 0;
+  position: absolute;
+  z-index: 10;
 }
 
 /*! Title Screen */

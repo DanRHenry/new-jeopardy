@@ -1,9 +1,16 @@
 import { handleClickedSquare } from "../gameplay/handlers/handleClickedSquare.js";
 import { websocketURL } from "../websocketURL.js";
 import { beginGame } from "./createGameFunctions/buildSections/handlers/beginGame.js";
+import { failureListings } from "../gameplay/failureListing.js";
+import { successListings } from "../gameplay/successListing.js";
 
-export function openTeacherSideWebsocket(className, email, categoriesArray, gameNameInput) {
-  console.log(gameNameInput)
+export function openTeacherSideWebsocket(
+  className,
+  email,
+  categoriesArray,
+  gameNameInput
+) {
+  console.log(gameNameInput);
   const socket = new WebSocket(websocketURL);
 
   const emailObj = JSON.stringify({ teacherEmail: email });
@@ -12,7 +19,9 @@ export function openTeacherSideWebsocket(className, email, categoriesArray, game
 
   socket.addEventListener("open", function (event) {
     socket.send(emailObj);
-    socket.send(JSON.stringify({ className: className, gameName: gameNameInput }));
+    socket.send(
+      JSON.stringify({ className: className, gameName: gameNameInput })
+    );
     socket.send(JSON.stringify({ categoriesArray: categoriesArray }));
 
     socket.addEventListener("message", function (message) {
@@ -25,7 +34,9 @@ export function openTeacherSideWebsocket(className, email, categoriesArray, game
           studentList.push(data.studentEmail);
           sessionStorage.studentList = JSON.stringify(studentList);
           socket.send(emailObj);
-          socket.send(JSON.stringify({ className: className, gameName: gameNameInput }));
+          socket.send(
+            JSON.stringify({ className: className, gameName: gameNameInput })
+          );
           socket.send(JSON.stringify({ categoriesArray: categoriesArray }));
           const studentEmailRow = document.createElement("div");
           studentEmailRow.innerText = data.studentEmail;
@@ -37,7 +48,13 @@ export function openTeacherSideWebsocket(className, email, categoriesArray, game
             beginGameBtn.innerText = "Begin Game";
 
             beginGameBtn.addEventListener("click", () => {
-              socket.send(JSON.stringify({ cueToStart: "true", className: className, gameName: gameNameInput }));
+              socket.send(
+                JSON.stringify({
+                  cueToStart: "true",
+                  className: className,
+                  gameName: gameNameInput,
+                })
+              );
               beginGame(categoriesArray, socket, className, gameNameInput);
             });
 
@@ -68,7 +85,16 @@ export function openTeacherSideWebsocket(className, email, categoriesArray, game
 
       if (data.correctAnswer) {
         console.log("correct Answer was guessed: ", data);
+        console.log("play correct audio");
 
+        const audioSrc = `./assets/audio/success/${pickRandomSong(
+          successListings
+        )}`;
+
+        let mySound = new Audio(audioSrc);
+                console.log(sessionStorage.playSound)
+
+        if (sessionStorage.playSound == "true") {mySound.play()}
         const studentList = JSON.parse(sessionStorage.studentList);
 
         const playerIndex = studentList.indexOf(data.playerName);
@@ -106,6 +132,16 @@ export function openTeacherSideWebsocket(className, email, categoriesArray, game
       }
 
       if (data.incorrectAnswer) {
+        console.log("play incorrect audio");
+        const audioSrc = `./assets/audio/failure/${pickRandomSong(
+          failureListings
+        )}`;
+        
+        console.log("audioSrc: ",audioSrc)
+
+        let mySound = new Audio(audioSrc);
+        console.log(sessionStorage.playSound)
+        if (sessionStorage.playSound == "true") {mySound.play()};
         console.log(sessionStorage.email);
         console.log(data.playerName);
 
@@ -125,7 +161,12 @@ export function openTeacherSideWebsocket(className, email, categoriesArray, game
 
         let updatedScore = (oldScore -= Number(data.score));
 
-        console.log("oldScore, change, updated", data.score, oldScore, updatedScore);
+        console.log(
+          "oldScore, change, updated",
+          data.score,
+          oldScore,
+          updatedScore
+        );
 
         socket.send(
           JSON.stringify({
@@ -173,9 +214,8 @@ export function openTeacherSideWebsocket(className, email, categoriesArray, game
 
       if (data.incorrectPlayerBox) {
         console.log(data);
-                document.getElementById(data.incorrectPlayerBox).innerText =
+        document.getElementById(data.incorrectPlayerBox).innerText =
           data.updatedScore;
-
       }
 
       if (data.correctPlayerBox) {
@@ -186,4 +226,16 @@ export function openTeacherSideWebsocket(className, email, categoriesArray, game
       }
     });
   });
+
+  // ! --------------------- Functions ---------------------------
+
+  function pickRandomSong(array) {
+    const arrayLength = array.length
+
+    const randomNum = Math.floor(Math.random() * ((arrayLength -1)));
+    console.log(randomNum)
+    console.log(array[randomNum]);
+
+    return array[randomNum];
+  }
 }

@@ -29,6 +29,8 @@ export function handleBuzzIn(activePrompt, activeResponse, socket, score) {
           score: score
         })
       );
+
+      socket.send(JSON.stringify({playCorrectSound: true}))
     } else {
       console.log("incorrect");
       document.getElementById("studentAnswering").innerText = "";
@@ -43,6 +45,7 @@ export function handleBuzzIn(activePrompt, activeResponse, socket, score) {
           score: score,
         })
       );
+      socket.send(JSON.stringify({playIncorrectSound: true}))
     }
   });
 

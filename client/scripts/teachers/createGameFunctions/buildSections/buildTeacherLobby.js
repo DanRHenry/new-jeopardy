@@ -20,4 +20,21 @@ export async function buildTeacherLobby(className, categoriesArray) {
     pendingGameWindow.append(studentListSection)
 
     mainContent.append(pendingGameWindow)
+
+    const enableSoundsBtn = document.createElement("button")
+    enableSoundsBtn.id = "enableSoundsBtn"
+    enableSoundsBtn.innerText = "Enable Sounds"
+    sessionStorage.playSound = "false"
+    enableSoundsBtn.addEventListener("click", () => {
+        if (enableSoundsBtn.innerText === "Disable Sounds") {
+            sessionStorage.playSound = "false"
+            enableSoundsBtn.innerText = "Enable Sounds"
+        }
+        else if (enableSoundsBtn.innerText === "Enable Sounds") {
+            sessionStorage.playSound = "true"
+            enableSoundsBtn.innerText = "Disable Sounds"
+        }
+    })
+
+    document.getElementById("mainContent").before(enableSoundsBtn)
 }

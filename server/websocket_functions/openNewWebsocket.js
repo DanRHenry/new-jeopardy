@@ -90,6 +90,13 @@ const openNewWebsocket = (server) => {
             client.send(JSON.stringify(info));
             ws.send(JSON.stringify(info));
           }
+          if (info.playCorrectSound) {
+            ws.send(JSON.stringify(info))
+          }
+
+          if (info.playIncorrectSound) {
+            ws.send(JSON.stringify(info))
+          }
         }
       });
 
