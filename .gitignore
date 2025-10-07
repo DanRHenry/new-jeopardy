@@ -140,3 +140,5 @@ vite.config.ts.timestamp-*
 
 ./client/scripts/serverURL.js
 serverURL.js
+./client/scripts/websocketURL.js
+websocketURL.js
