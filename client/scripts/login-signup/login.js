@@ -1,6 +1,7 @@
 import { joinGame } from "../students/joinGame.js";
 import { createGame } from "../teachers/createGame.js";
 import { titleScreen } from "../titleScreen.js";
+import { serverURL } from "../serverURL.js";
 
 export async function login(email, password, role) {
   try {
@@ -11,7 +12,7 @@ export async function login(email, password, role) {
     });
 
     const data = await fetch(
-      "http://127.0.0.1:3350/api/new-jeopardy/user/login",
+      `${serverURL}/user/login`,
       {
         method: "POST",
         mode: "cors",

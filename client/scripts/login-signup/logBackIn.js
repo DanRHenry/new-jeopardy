@@ -1,6 +1,7 @@
 import { joinGame } from "../students/joinGame.js";
 import { createGame } from "../teachers/createGame.js";
 import { titleScreen } from "../titleScreen.js";
+import { serverURL } from "../serverURL.js";
 
 export async function logBackIn(email, token) {
   try {
@@ -12,7 +13,7 @@ export async function logBackIn(email, token) {
     });
 
     const data = await fetch(
-      "http://127.0.0.1:3350/api/new-jeopardy/user/findOne",
+      `${serverURL}/user/findOne`,
       {
         method: "POST",
         mode: "cors",
