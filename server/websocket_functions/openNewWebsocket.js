@@ -1,7 +1,13 @@
 const { sendStudentEmail } = require("./sendStudentEmail");
+// import {sendStudentEmail} from "./sendStudentEmail.js";
+// const { sendTeacherEmail } = require("./sendTeacherEmail");
+
 const { sendTeacherEmail } = require("./sendTeacherEmail");
+// import {sendTeacherEmail} from "./sendTeacherEmail.js";
 const { sendClassName } = require("./sendClassName");
+// import {sendClassName} from "./sendClassName.js";
 const { sendCategoriesArray } = require("./sendCategoriesArray");
+// import {sendCategoriesArray} from "./sendCategoriesArray.js";
 
 const openNewWebsocket = (server) => {
   const WebSocket = require("ws");
@@ -18,19 +24,31 @@ const openNewWebsocket = (server) => {
           const info = JSON.parse(data);
 
           if (info.teacherEmail) {
-            sendTeacherEmail(info.teacherEmail, ws, client);
+            ws.send(
+              JSON.stringify({ message: "your teacherEmail has been received" })
+            );
+            client.send(JSON.stringify({ teacherEmail: info.teacherEmail }));
           }
 
           if (info.studentEmail) {
-            sendStudentEmail(info.studentEmail, ws, client);
+            client.send(JSON.stringify({ studentEmail: info.studentEmail}))
+            // sendStudentEmail(info.studentEmail, ws, client);
           }
 
           if (info.className) {
-            sendClassName(info.className, ws, client);
+            ws.send(
+              JSON.stringify({ message: "the className has been received" })
+            );
+
+            client.send(JSON.stringify({ className: info.className }));
+            // sendClassName(info.className, ws, client);
           }
 
           if (info.categoriesArray) {
-            sendCategoriesArray(info.categoriesArray, ws, client);
+          ws.send(JSON.stringify({ message: "your categoriesArray has been received" }));
+                
+    client.send(JSON.stringify({ categoriesArray: info.categoriesArray}))
+            // sendCategoriesArray(info.categoriesArray, ws, client);
           }
 
           if (info.squareClicked) {
@@ -70,11 +88,11 @@ const openNewWebsocket = (server) => {
           }
 
           if (info.playCorrectSound) {
-            ws.send(JSON.stringify(info))
+            ws.send(JSON.stringify(info));
           }
 
           if (info.playIncorrectSound) {
-            ws.send(JSON.stringify(info))
+            ws.send(JSON.stringify(info));
           }
         }
       });

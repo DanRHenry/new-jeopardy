@@ -5,17 +5,17 @@ const app = express();
 const server = require("http").createServer(app);
 const PORT = process.env.PORT;
 
-const openWebsocket = require("./websocket_functions/openNewWebsocket")
+const openNewWebsocket = require("./websocket_functions/openNewWebsocket")
 
-openWebsocket(server)
+openNewWebsocket(server)
 
 const bodyParser = require("body-parser");
 
 // ---------------------- Controllers: -------------------
-const user = require("./controllers/user.controller");
-const questionAndAnswer = require("./controllers/questionAndAnswer.controller");
-const category = require("./controllers/category.controller");
-const games = require("./controllers/games.controller");
+const user = require("./controllers/user.controller.js");
+const questionAndAnswer = require("./controllers/questionAndAnswer.controller.js");
+const category = require("./controllers/category.controller.js");
+const games = require("./controllers/games.controller.js");
 
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -31,7 +31,7 @@ app.use(express.json());
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const requireValidation = require("./middleware/validate-session");
+const requireValidation = require("./middleware/validate-session.js");
 // const openNewWebsocket = require("./websocket_functions/openNewWebsocket");
 
 // ----------------------- Endpoints -------------------

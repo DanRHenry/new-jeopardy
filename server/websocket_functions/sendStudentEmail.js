@@ -1,7 +1,5 @@
-export const sendStudentEmail = (studentEmail, ws, client) => {
-
-        // ws.send(JSON.stringify({ message: "your studentEmail has been received" }));
-                
-        // client.send(JSON.stringify({ message: "studentEmail:" }));
+const sendStudentEmail = (studentEmail, ws, client) => {
             client.send(JSON.stringify({ studentEmail: studentEmail}))
 }
+
+module.exports = sendStudentEmail;
