@@ -62,4 +62,11 @@ export function openPromptResponseWindow(activePrompt, activeResponse, socket, a
             socket.send(JSON.stringify({"showResponse": "true", "activePrompt": activePrompt, "activeResponse": activeResponse}))
             document.getElementById("showResponseBtn")?.removeEventListener("click", showResponse)
         }
+
+        function checkGameStatus() {
+            const gameSquares = document.getElementsByClassName("gameSquares")
+            for (let i = 0; i < gameSquares.length; i++) {
+                
+            }
+        }
 }

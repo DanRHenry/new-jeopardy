@@ -1,4 +1,5 @@
 import { createGame } from "../teachers/createGame.js";
+import { openStudentSideWebsocket } from "../students/openStudentSideWebsocket.js";
 import { signup } from "./signup.js";
 
 export async function loginScreen(role) {
@@ -33,8 +34,32 @@ export async function loginScreen(role) {
   loginBtn.type = "submit";
   loginBtn.innerText = "Submit";
 
+  if (role === "student") {
+    const nameInput = document.createElement("input")
+    nameInput.id = "studentNameInput"
+    nameInput.placeholder = 'name'
+
+    const teacherList = document.createElement("input")
+    teacherList.id = "teacherList"
+    teacherList.name = "teacherList"
+    
+    const teacherListLabel = document.createElement("label")
+    teacherListLabel.setAttribute("for", "teacherList")
+    teacherListLabel.innerText = "Select Teacher"
+
+      loginForm.append(nameInput, loginFormEmailInput, loginFormPasswordInput, teacherListLabel,teacherList, loginBtn);
+
+      loginScreenContent.append(loginForm);
+      mainContent.append(loginScreenContent);
+
+      openStudentSideWebsocket()
+  }
+
+  else {
   loginForm.append(loginFormEmailInput, loginFormPasswordInput, loginBtn);
 
   loginScreenContent.append(loginForm);
   mainContent.append(loginScreenContent);
+  }
+
 }

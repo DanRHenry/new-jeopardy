@@ -37,4 +37,6 @@ export async function buildTeacherLobby(className, categoriesArray) {
     })
 
     document.getElementById("mainContent").before(enableSoundsBtn)
+
+    //! ------------- functions---------------------
 }
