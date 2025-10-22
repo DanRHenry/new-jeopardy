@@ -12,10 +12,10 @@ export async function buildTeacherLobby(className, categoriesArray) {
   studentEmailsHeader.id = "studentEmailsHeader";
   studentEmailsHeader.innerText = "Students";
 
-  const studentEmailsList = document.createElement("div");
-  studentEmailsList.id = "studentEmailsList";
+  const studentNamesList = document.createElement("div");
+  studentNamesList.id = "studentNamesList";
 
-  studentListSection.append(studentEmailsHeader, studentEmailsList);
+  studentListSection.append(studentEmailsHeader, studentNamesList);
 
   pendingGameWindow.append(studentListSection);
 

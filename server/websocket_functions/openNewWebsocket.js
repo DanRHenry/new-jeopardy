@@ -42,7 +42,7 @@ const openNewWebsocket = (server) => {
             console.log("close websocket received")
             ws.send(JSON.stringify({message: "terminating websocket"}))
             ws.close()
-            clearInterval(interval)
+            // clearInterval(interval)
 
       }
       wss.clients.forEach(function each(client) {
@@ -61,7 +61,7 @@ const openNewWebsocket = (server) => {
           }
 
           if (info.studentEmail) {
-            client.send(JSON.stringify({ studentEmail: info.studentEmail}))
+            client.send(JSON.stringify({ studentEmail: info.studentEmail, studentName: info.studentName}))
             // sendStudentEmail(info.studentEmail, ws, client);
           }
 
@@ -128,7 +128,7 @@ const openNewWebsocket = (server) => {
       });
     });
     wss.on("close", () => {
-      clearInterval(interval)
+      // clearInterval(interval)
     })
   });
 };

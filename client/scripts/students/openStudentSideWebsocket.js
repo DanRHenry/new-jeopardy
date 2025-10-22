@@ -35,7 +35,7 @@ export function openStudentSideWebsocket() {
             if (teacherList) {
               teacherList.append(teacherOption)
             }
-  const emailObj = JSON.stringify({ studentEmail: sessionStorage.email });
+  const emailObj = JSON.stringify({ studentEmail: sessionStorage.email, studentName: sessionStorage.studentName });
 
             socket.send(emailObj);
             }

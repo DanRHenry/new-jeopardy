@@ -36,13 +36,14 @@ export function openTeacherSideWebsocket(
 
         let studentList = JSON.parse(sessionStorage.studentList);
         console.log(studentList, typeof studentList);
+        console.log(data)
         if (!studentList.includes(data.studentEmail)) {
-          studentList.push(data.studentEmail);
+          studentList.push(data.studentName);
           sessionStorage.studentList = JSON.stringify(studentList);
 
-          const studentEmailRow = document.createElement("div");
-          studentEmailRow.innerText = data.studentEmail;
-          document.getElementById("studentEmailsList").append(studentEmailRow);
+          const studentNameRow = document.createElement("div");
+          studentNameRow.innerText = data.studentName;
+          document.getElementById("studentNamesList").append(studentNameRow);
 
           if (!document.getElementById("beginGameBtn")) {
             const beginGameBtn = document.createElement("button");
