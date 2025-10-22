@@ -4,6 +4,23 @@ export async function addCategoriesToGame(
   classNameInput,
   gameNameInput
 ) {
+
+    if (sessionStorage.gameName) {
+    const email = sessionStorage.email;
+    const role = sessionStorage.role;
+    const token = sessionStorage.token;
+    const categoriesArray = JSON.parse(sessionStorage.categoriesArray);
+    const className = sessionStorage.className;
+    const gameName = sessionStorage.gameName;
+
+    console.log(email, className, gameName, role, token, categoriesArray)
+
+    if (email && className && gameName && role === "teacher" && token) {
+        startGame(className, email, categoriesArray, gameName)
+    }
+  }
+
+else {
   if (!availableCategoriesArray || !classNameInput || !gameNameInput) {
     alert("missing field");
     return;
@@ -77,10 +94,15 @@ startGameBtn.addEventListener("click", () => {
   // console.log("questions & answers: ", availableCategoriesArray);
 
   // console.log("className: ",className)
+  console.log("gameName: ",gameNameInput)
+  sessionStorage.categoriesArray = JSON.stringify(availableCategoriesArray);
+  sessionStorage.className = className.innerText;
+  sessionStorage.gameName = gameNameInput;
   startGame(className.innerText, sessionStorage.email,availableCategoriesArray, gameNameInput)
 });
 availableGamesTitleRow.append(className, gameName, startGameBtn);
 document
   .getElementById("availableGamesSection")
   .append(availableGamesTitleRow);
+  }
 }

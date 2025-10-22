@@ -3,7 +3,7 @@ import { createGame } from "../teachers/createGame.js";
 import { titleScreen } from "../titleScreen.js";
 import { serverURL } from "../serverURL.js";
 
-export async function login(email, password, role) {
+export async function login(email, password, role, studentName, teacherName, studentWebsocket) {
   try {
     const formBody = JSON.stringify({
       email: email,
@@ -11,36 +11,17 @@ export async function login(email, password, role) {
       role: role,
     });
 
-    const data = await fetch(
-      `${serverURL}/user/login`,
-      {
-        method: "POST",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: formBody,
-      }
-    );
+    const data = await fetch(`${serverURL}/user/login`, {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: formBody,
+    });
     const res = await data.json();
-    if (res.message === "Login successful!") {
-      const logoutBtn = document.createElement("button");
-      logoutBtn.id = "logoutBtn";
-      logoutBtn.innerText = "Logout";
-      logoutBtn.addEventListener("click", () => {
-        sessionStorage.removeItem("token");
-        sessionStorage.removeItem("email");
-        sessionStorage.removeItem("role");
-        sessionStorage.removeItem("teacherEmail");
-        sessionStorage.removeItem("studentList");
-        sessionStorage.removeItem("className");
-        sessionStorage.removeItem("categoriesArray");
-        sessionStorage.removeItem("studentList");
-        logoutBtn.remove();
-        titleScreen();
-      });
-
-      document.getElementById("mainContent").before(logoutBtn);
+    if (res.message === "Login successful!") 
+      {
       if (res.user.role === "teacher") {
         console.log(res.token);
         sessionStorage.email = email;
@@ -54,9 +35,10 @@ export async function login(email, password, role) {
         sessionStorage.email = email;
         sessionStorage.token = res.token;
         sessionStorage.role = role;
+        sessionStorage.studentName = studentName;
         console.log("role: ", role);
 
-        joinGame();
+        joinGame(studentWebsocket);
       }
     }
   } catch (err) {

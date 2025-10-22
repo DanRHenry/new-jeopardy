@@ -4,42 +4,54 @@ import { handleBuzzIn } from "../gameplay/handlers/handleBuzzIn.js";
 import { websocketURL } from "../websocketURL.js";
 
 export function openStudentSideWebsocket() {
-  const emailObj = JSON.stringify({
-    studentEmail: sessionStorage.email,
-  });
+
   const socket = new WebSocket(websocketURL);
 
+
   socket.addEventListener("open", function (event) {
-    socket.send(emailObj);
+    console.log("student socket open")
+
+  socket.send(JSON.stringify({"requestTeacherEmail": true}))
 
     socket.addEventListener("message", function (message) {
       if (message) {
-        if (message.data !== "welcomeMessage") {
+        if (message === "terminating websocket") {
+          console.log("the socket is closed")
+        }
+
           const data = JSON.parse(message.data);
           if (data.teacherEmail) {
-            // if (!sessionStorage.teacherEmail) {
+            console.log("teacher email received: ", data.teacherEmail)
+            if (!sessionStorage.teacherEmail) {
+            console.log(data.teacherEmail, " received")
             sessionStorage.teacherEmail = data.teacherEmail;
+
             const teacherOption = document.createElement("option")
             teacherOption.value = data.teacherEmail;
-            document.getElementById("teacherList").after(teacherOption)
+            teacherOption.innerText = data.teacherEmail
+            // teacherOption.setAttribute("for", "teacherList")
+
+            const teacherList = document.getElementById("teacherList")
+            if (teacherList) {
+              teacherList.append(teacherOption)
+            }
+  const emailObj = JSON.stringify({ studentEmail: sessionStorage.email });
 
             socket.send(emailObj);
-            // }
+            }
           }
+
           if (data.className) {
             sessionStorage.className = JSON.stringify(data.className);
-            // console.log(data.className);
           }
 
           if (data.categoriesArray) {
-            // console.log(data.categoriesArray);
             sessionStorage.categoriesArray = JSON.stringify(
               data.categoriesArray
             );
           }
 
           if (data.cueToStart) {
-            // console.log(data.cueToStart);
             beginGame(
               JSON.parse(sessionStorage.categoriesArray),
               socket,
@@ -130,8 +142,14 @@ export function openStudentSideWebsocket() {
               sessionStorage.removeItem("failedGuess");
             }, 5000);
           }
-        }
       }
     });
+
+    socket.onclose = (event) => {
+    console.log("The connection has been closed successfully.");
+    return;
+};
+    
   });
+  return socket;
 }

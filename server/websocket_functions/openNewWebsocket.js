@@ -14,14 +14,44 @@ const openNewWebsocket = (server) => {
   const wss = new WebSocket.Server({ server: server });
 
   wss.on("connection", function connection(ws) {
+    ws.isAlive = true;
+    ws.on("pong", () => {
+      ws.isAlive = true;
+    })
+
     ws.on("error", console.error);
 
+/*     const interval = setInterval(() => {
+      wss.clients.forEach((ws) => {
+        // console.log("alivestatus: ",ws.isAlive)
+        // if (ws.isAlive === false) {
+        //   console.log("Terminating unresponsive client");
+        //   ws.close()
+        //   clearInterval(interval)
+        //   return 
+        // }
+
+        // ws.isAlive = false;
+
+        ws.ping()
+      })
+    }, 5000) */
+
     ws.on("message", function message(data) {
+      if (JSON.parse(data).closeWebsocket) {
+            console.log("close websocket received")
+            ws.send(JSON.stringify({message: "terminating websocket"}))
+            ws.close()
+            clearInterval(interval)
+
+      }
       wss.clients.forEach(function each(client) {
         client.send(JSON.stringify({ WelcomeMessage: "WelcomeMessage" }));
         if (client !== ws && client.readyState === WebSocket.OPEN) {
           client.send(JSON.stringify({ "data: ": "Hello" }));
           const info = JSON.parse(data);
+
+          console.log("info received: ",info)
 
           if (info.teacherEmail) {
             ws.send(
@@ -97,6 +127,9 @@ const openNewWebsocket = (server) => {
         }
       });
     });
+    wss.on("close", () => {
+      clearInterval(interval)
+    })
   });
 };
 

@@ -1,24 +1,35 @@
-
 import { loginScreen } from "./login-signup/loginScreen.js";
 import { logBackIn } from "./login-signup/logBackIn.js";
+import { openStudentSideWebsocket } from "./students/openStudentSideWebsocket.js";
+import { openTeacherSideWebsocket } from "./teachers/openTeacherSideWebsocket.js";
 
 export async function titleScreen() {
-
-
   (async () => {
+        sessionStorage.clear()
+
     const email = sessionStorage.email;
     const role = sessionStorage.role;
-    const token = sessionStorage.token
+    const token = sessionStorage.token;
+    let categoriesArray;
+    if (sessionStorage.categoriesArray) {
+      categoriesArray = JSON.parse(sessionStorage.categoriesArray);
+    }
 
-    if (email && role === "teacher" && token) {
+    const className = sessionStorage.className;
+    const gameName = sessionStorage.gameName;
+
+    // console.log(email, className, gameName, role, token, categoriesArray)
+
+    if (email && className && gameName && role === "teacher" && token) {
       // console.log("email: ",email, "role: ",role, "token: ",token)
-      logBackIn(email, token)
-    }
-    else if (email && role === "student" && token) {
+      // openTeacherSideWebsocket(className, email, categoriesArray, gameName);
+      // logBackIn(email, token);
+    } else if (email && role === "student" && token) {
       // console.log("email: ",email, "role: ",role, "token: ",token)
-      logBackIn(email, token)
+      // openStudentSideWebsocket();
+      // logBackIn(email, token);
     }
-  })()
+  })();
 
   const mainContent = document.getElementById("mainContent");
   mainContent.innerHTML = "";
@@ -47,11 +58,13 @@ export async function titleScreen() {
   //!-----------------
 
   function handleTeacherBtnClick() {
+    teacherBtn.removeEventListener("click", handleTeacherBtnClick)
     loginScreen("teacher");
   }
 
   function handleStudentBtnClick() {
-    loginScreen("student")
+    studentBtn.removeEventListener("click", handleStudentBtnClick)
+    loginScreen("student", openStudentSideWebsocket());
   }
 
   teacherBtn.addEventListener("click", handleTeacherBtnClick);

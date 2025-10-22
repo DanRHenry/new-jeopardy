@@ -2,6 +2,7 @@ import { joinGame } from "../students/joinGame.js";
 import { createGame } from "../teachers/createGame.js";
 import { titleScreen } from "../titleScreen.js";
 import { serverURL } from "../serverURL.js";
+import { openStudentSideWebsocket } from "../students/openStudentSideWebsocket.js";
 
 export async function logBackIn(email, token) {
   try {
@@ -41,14 +42,17 @@ export async function logBackIn(email, token) {
         titleScreen();
       });
 
-      document.getElementById("mainContent").before(logoutBtn);
       if (res.user.role === "teacher") {
         // console.log(res.token);
         sessionStorage.email = res.user.email;
         sessionStorage.role = res.user.role;
         createGame();
       } else if (res.user.role === "student") {
-        joinGame();
+        // let socket = openStudentSideWebsocket()
+        // socket.send(JSON.stringify({"closeWebsocket": true}))
+        const studentWebsocket = openStudentSideWebsocket()
+
+        joinGame(studentWebsocket);
       }
     }
   } catch (err) {

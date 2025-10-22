@@ -374,6 +374,9 @@ body {
   font-weight: bold;
 }
 
+#teacherSelectLine{
+  margin-top: 2rem;
+}
 /*! ---------------------- Gameplay Section ------------------------  */
 
 #gameWindow {

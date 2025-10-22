@@ -4,6 +4,7 @@ import { beginGame } from "./createGameFunctions/buildSections/handlers/beginGam
 import { failureListings } from "../gameplay/failureListing.js";
 import { successListings } from "../gameplay/successListing.js";
 import { createGame } from "./createGame.js";
+import { createLogoutBtn } from "../login-signup/createLogoutBtn.js";
 
 export function openTeacherSideWebsocket(
   className,
@@ -11,34 +12,34 @@ export function openTeacherSideWebsocket(
   categoriesArray,
   gameNameInput
 ) {
-  // console.log(gameNameInput);
   const socket = new WebSocket(websocketURL);
 
   const emailObj = JSON.stringify({ teacherEmail: email });
 
-  // Connection Opened:
-
   socket.addEventListener("open", function (event) {
-    socket.send(emailObj);
-    socket.send(
-      JSON.stringify({ className: className, gameName: gameNameInput })
-    );
-    socket.send(JSON.stringify({ categoriesArray: categoriesArray }));
+    console.log("teacher socket opened");
+
+    sendEmailClassNameGameNameandCategories();
 
     socket.addEventListener("message", function (message) {
+      console.log("received: ", message.data);
+      if (message === "terminating websocket") {
+        console.log("the socket is closed");
+      }
+
       const data = JSON.parse(message.data);
 
       if (data.studentEmail) {
+        console.log("student email received: ", data.studentEmail);
+
+        sendEmailClassNameGameNameandCategories();
+
         let studentList = JSON.parse(sessionStorage.studentList);
-        // console.log(studentList, typeof studentList);
+        console.log(studentList, typeof studentList);
         if (!studentList.includes(data.studentEmail)) {
           studentList.push(data.studentEmail);
           sessionStorage.studentList = JSON.stringify(studentList);
-          socket.send(emailObj);
-          socket.send(
-            JSON.stringify({ className: className, gameName: gameNameInput })
-          );
-          socket.send(JSON.stringify({ categoriesArray: categoriesArray }));
+
           const studentEmailRow = document.createElement("div");
           studentEmailRow.innerText = data.studentEmail;
           document.getElementById("studentEmailsList").append(studentEmailRow);
@@ -59,15 +60,20 @@ export function openTeacherSideWebsocket(
               beginGame(categoriesArray, socket, className, gameNameInput);
             });
 
-            const backBtn = document.createElement("button")
-            backBtn.id = "backBtn"
-            backBtn.innerText = "Back"
-            backBtn.addEventListener("click", createGame)
+            const backBtn = document.createElement("button");
+            backBtn.id = "backBtn";
+            backBtn.innerText = "Back";
 
-            const btnRow = document.createElement("div")
-            btnRow.id = "btnRow"
+            backBtn.addEventListener("click", () => {
+              sessionStorage.removeItem("gameName");
+              sessionStorage.removeItem("categoriesArray");
+              createGame();
+            });
 
-            btnRow.append(backBtn, beginGameBtn)
+            const btnRow = document.createElement("div");
+            btnRow.id = "btnRow";
+
+            btnRow.append(backBtn, beginGameBtn);
             document.getElementById("studentEmailsHeader").before(btnRow);
           }
         }
@@ -164,26 +170,10 @@ export function openTeacherSideWebsocket(
           setTimeout(() => {
             document.getElementById("studentAnswering").innerText = "";
           }, 3000);
-
-          // if (sessionStorage.failedGuess !== sessionStorage.email) {
-          //   const buzzInBtn = document.createElement("button");
-          //   buzzInBtn.id = "buzzInBtn";
-          //   buzzInBtn.innerText = "Buzz";
-          //   buzzInBtn.addEventListener("click", () => {
-          //     handleBuzzIn(
-          //       data.activePrompt,
-          //       data.activeResponse,
-          //       socket,
-          //       data.score
-          //     );
-          //   });
-          //   document.getElementById("promptResponseWindow").append(buzzInBtn);
-          // }
         }
       }
 
       if (data.showResponse) {
-        // console.log("showing response: ");
         document.getElementById(
           "promptText"
         ).innerText = `${data.activePrompt}: ${data.activeResponse}`;
@@ -193,32 +183,6 @@ export function openTeacherSideWebsocket(
           sessionStorage.removeItem("failedGuess");
         }, 5000);
       }
-
-      // if (data.incorrectPlayerBox) {
-      //   // console.log("data: ",data)
-      //   // if (
-      //   //   document.getElementById(data.incorrectPlayerBox).innerText ===
-      //   //   data.updatedScore
-      //   // ) {
-      //   //   return;
-      //   // }
-      //   // document.getElementById(data.incorrectPlayerBox).innerText =
-      //   //   data.updatedScore;
-      //   sortUpdateAndSendScoreRankings(data, "incorrectPlayerBox");
-      //   // document.getElementById(data.incorrectPlayerBox).innerText = data.updatedScore;
-      // }
-
-      // if (data.correctPlayerBox) {
-      //   // console.log("data: ",data)
-      //   // if (
-      //   //   document.getElementById(data.correctPlayerBox, "correctPlayerBox").innerText ===
-      //   //   data.updatedScore
-      //   // ) {
-      //   //   return;
-      //   // }
-
-      //   sortUpdateAndSendScoreRankings(data);
-      // }
     });
   });
 
@@ -228,9 +192,6 @@ export function openTeacherSideWebsocket(
     const arrayLength = array.length;
 
     const randomNum = Math.floor(Math.random() * (arrayLength - 1));
-    // console.log(randomNum);
-    // console.log(array[randomNum]);
-
     return array[randomNum];
   }
 
@@ -277,4 +238,13 @@ export function openTeacherSideWebsocket(
         players[i].score;
     }
   }
+
+  function sendEmailClassNameGameNameandCategories() {
+    socket.send(emailObj);
+    socket.send(
+      JSON.stringify({ className: className, gameName: gameNameInput })
+    );
+    socket.send(JSON.stringify({ categoriesArray: categoriesArray }));
+  }
+  createLogoutBtn(socket);
 }

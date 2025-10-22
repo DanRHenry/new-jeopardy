@@ -1,8 +1,6 @@
-import { createGame } from "../teachers/createGame.js";
-import { openStudentSideWebsocket } from "../students/openStudentSideWebsocket.js";
 import { signup } from "./signup.js";
 
-export async function loginScreen(role) {
+export async function loginScreen(role, studentWebsocket) {
   const mainContent = document.getElementById("mainContent");
   mainContent.innerHTML = "";
 
@@ -10,17 +8,36 @@ export async function loginScreen(role) {
   loginScreenContent.id = "loginScreenContent";
 
   const loginForm = document.createElement("form");
-  loginForm.id = "teacherLoginForm";
+  loginForm.id = `${role}LoginForm`
+
   loginForm.onsubmit = async function (e) {
     e.preventDefault();
 
-    signup(this.email.value, this.password.value, role)
-}
+    if (role === "teacher") {
+      signup(this.email.value, this.password.value, role);
+    }
 
+    if (role === "student") {
+      signup(
+        this.email.value,
+        this.password.value,
+        role,
+        this.studentNameInput.value,
+        "teachername placeholder",
+        studentWebsocket
+      );
+        const emailObj = JSON.stringify({
+          studentEmail: sessionStorage.email,
+        });
+            console.log("sending email to everyone",emailObj)
+          studentWebsocket.send(emailObj);
+    }
+  };
 
   const loginFormEmailInput = document.createElement("input");
   loginFormEmailInput.type = "email";
   loginFormEmailInput.name = "email";
+  loginFormEmailInput.autocomplete = "on";
   loginFormEmailInput.id = "loginFormEmailInput";
   loginFormEmailInput.placeholder = "email";
 
@@ -35,31 +52,24 @@ export async function loginScreen(role) {
   loginBtn.innerText = "Submit";
 
   if (role === "student") {
-    const nameInput = document.createElement("input")
-    nameInput.id = "studentNameInput"
-    nameInput.placeholder = 'name'
+    const nameInput = document.createElement("input");
+    nameInput.id = "studentNameInput";
+    nameInput.name = "studentNameInput";
+    nameInput.placeholder = "screen name";
 
-    const teacherList = document.createElement("input")
-    teacherList.id = "teacherList"
-    teacherList.name = "teacherList"
-    
-    const teacherListLabel = document.createElement("label")
-    teacherListLabel.setAttribute("for", "teacherList")
-    teacherListLabel.innerText = "Select Teacher"
+    const emailAndPasswordLine = document.createElement("div");
+    emailAndPasswordLine.id = "emailAndPasswordLine";
 
-      loginForm.append(nameInput, loginFormEmailInput, loginFormPasswordInput, teacherListLabel,teacherList, loginBtn);
+    emailAndPasswordLine.append(loginFormEmailInput, loginFormPasswordInput);
 
-      loginScreenContent.append(loginForm);
-      mainContent.append(loginScreenContent);
+    loginForm.append(nameInput, emailAndPasswordLine, loginBtn);
 
-      openStudentSideWebsocket()
+    loginScreenContent.append(loginForm);
+    mainContent.append(loginScreenContent);
+  } else {
+    loginForm.append(loginFormEmailInput, loginFormPasswordInput, loginBtn);
+
+    loginScreenContent.append(loginForm);
+    mainContent.append(loginScreenContent);
   }
-
-  else {
-  loginForm.append(loginFormEmailInput, loginFormPasswordInput, loginBtn);
-
-  loginScreenContent.append(loginForm);
-  mainContent.append(loginScreenContent);
-  }
-
 }

@@ -1,13 +1,24 @@
 import { login } from "./login.js";
 import {serverURL }from "../serverURL.js"
 
-export async function signup(email, password, role) {
+export async function signup(email, password, role, studentName, teacherName, studentWebsocket) {
   try {
-    const formBody = JSON.stringify({
-      email: email,
-      password: password,
-      role: role,
-    });
+    let formBody
+    if (role === "teacher") {
+      formBody = JSON.stringify({
+        email: email,
+        password: password,
+        role: role,
+      });
+    }
+
+    if (role === "student") {
+        formBody = JSON.stringify({
+        email: email,
+        password: password,
+        role: role,
+      });
+    }
 
     const data = await fetch(
       `${serverURL}/user/signup`,
@@ -23,7 +34,7 @@ export async function signup(email, password, role) {
     // const res = await data.json();
     // console.log("res: ", res);
     // if (res.message === "existing user") {
-      login(email, password, role);
+      login(email, password, role, studentName, teacherName, studentWebsocket);
     // }
   } catch (err) {
     console.error(err);
