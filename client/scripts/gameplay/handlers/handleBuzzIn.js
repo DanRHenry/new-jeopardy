@@ -1,8 +1,11 @@
 export function handleBuzzIn(activePrompt, activeResponse, socket, score) {
   // console.log("buzzing in");
 
-  socket.send(JSON.stringify({ buzzIn: sessionStorage.email }));
+  if (sessionStorage.role === "student") {    
+    socket.send(JSON.stringify({ buzzIn: sessionStorage.studentName }));
+  }
 
+  if (sessionStorage.teacherJudgesResponses === "false") {
   const responseInputRow = document.createElement("div");
   responseInputRow.id = "responseInputRow";
 
@@ -19,7 +22,8 @@ export function handleBuzzIn(activePrompt, activeResponse, socket, score) {
   responseInputField.focus();
 
   document.getElementById("promptResponseWindow").append(responseInputRow);
-
+  }
+  
   //! ----------------- Functions -----------------------------------------------
 
   function checkResponseToPrompt(input) {

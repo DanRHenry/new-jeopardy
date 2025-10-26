@@ -1,4 +1,4 @@
-export function buildGameGrid(categoriesArray, socket) {
+export function buildGameGrid(categoriesArray, socket, banlist) {
   // console.log("categoriesArray: ", categoriesArray);
   const gameGrid = document.createElement("div");
   gameGrid.id = "gameGrid";
@@ -51,7 +51,9 @@ export function buildGameGrid(categoriesArray, socket) {
   if (sessionStorage.role === "teacher") {
     const borderGrid = document.createElement("div");
     borderGrid.id = "borderGrid";
-    const players = JSON.parse(sessionStorage.studentList);
+    const studentList = JSON.parse(sessionStorage.studentList)
+
+    const players = studentList.studentNames;
 
     for (let i = 0; i < players.length + (28 - players.length); i++) {
       const playerBox = document.createElement("div");

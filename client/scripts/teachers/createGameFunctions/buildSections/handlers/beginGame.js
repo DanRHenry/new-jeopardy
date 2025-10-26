@@ -2,8 +2,11 @@ import { buildGameGrid } from "../../../../gameplay/buildGameGrid.js"
 import { buildPlayerScoreSection } from "../../../../students/buildSections/buildPlayerScoreSection.js"
 
 export async function beginGame(categoriesArray, socket, className, gameNameInput) {
-    // console.log("beginning game...")
+    console.log("beginning game...")
     // console.log("categoriesArray: ",categoriesArray)
+    // console.log(socket)
+    // console.log('className: ',className)
+    // console.log("gameNameInput: ",gameNameInput)
     const mainContent = document.getElementById("mainContent")
     mainContent.innerHTML = ""
 

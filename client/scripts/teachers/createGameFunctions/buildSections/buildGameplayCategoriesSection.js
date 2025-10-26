@@ -15,6 +15,10 @@ export async function buildGameplayCategoriesSection(availableCategoriesArray) {
   const categoryHeadersRow = document.createElement("div");
   categoryHeadersRow.id = "categoryHeadersRow";
 
+
+  const selectHeader = document.createElement("span")
+  selectHeader.innerText = "Select"
+
   const classHeader = document.createElement("span");
   classHeader.innerText = "Class";
 
@@ -28,6 +32,7 @@ export async function buildGameplayCategoriesSection(availableCategoriesArray) {
   responsesHeader.innerText = "Responses";
 
   categoryHeadersRow.append(
+    selectHeader,
     classHeader,
     categoryNameHeader,
     promptsHeader,
@@ -80,18 +85,18 @@ export async function buildGameplayCategoriesSection(availableCategoriesArray) {
         const addCategoriesToGameBtn = document.createElement("button");
 
         addCategoriesToGameBtn.id = "addCategoriesToGameCheckboxesButton";
-        addCategoriesToGameBtn.innerText = "Add to Game";
+        addCategoriesToGameBtn.innerText = "Add to Games List";
 
         const addCategoriesToGameGameNameField =
           document.createElement("input");
         addCategoriesToGameGameNameField.id =
           "addCategoriesToGameGameNameField";
-        addCategoriesToGameGameNameField.placeholder = "Game Name";
+        addCategoriesToGameGameNameField.placeholder = "New Game Name";
         addCategoriesToGameGameNameField.required = "true"
 
         const addCategoriesToGameClassField = document.createElement("input");
         addCategoriesToGameClassField.id = "addCategoriesToGameClassField";
-        addCategoriesToGameClassField.placeholder = "Class Name";
+        addCategoriesToGameClassField.placeholder = "Enter Class Name";
         addCategoriesToGameClassField.required = "true"
 
         const catAndClassRow = document.createElement("div");

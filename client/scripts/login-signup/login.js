@@ -38,6 +38,13 @@ export async function login(email, password, role, studentName, teacherName, stu
         sessionStorage.studentName = studentName;
         console.log("role: ", role);
 
+          const emailObj = JSON.stringify({
+          studentEmail: email,
+          studentName: studentName
+        });
+            console.log("sending email to everyone",emailObj)
+          studentWebsocket.send(emailObj);
+
         joinGame(studentWebsocket);
       }
     }

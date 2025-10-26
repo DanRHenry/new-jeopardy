@@ -17,6 +17,7 @@ export async function loginScreen(role, studentWebsocket) {
       signup(this.email.value, this.password.value, role);
     }
 
+    console.log("role: ", role)
     if (role === "student") {
       signup(
         this.email.value,
@@ -26,11 +27,6 @@ export async function loginScreen(role, studentWebsocket) {
         "teachername placeholder",
         studentWebsocket
       );
-        const emailObj = JSON.stringify({
-          studentEmail: sessionStorage.email,
-        });
-            console.log("sending email to everyone",emailObj)
-          studentWebsocket.send(emailObj);
     }
   };
 

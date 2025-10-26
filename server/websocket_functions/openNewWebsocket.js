@@ -60,6 +60,10 @@ const openNewWebsocket = (server) => {
             client.send(JSON.stringify({ teacherEmail: info.teacherEmail }));
           }
 
+          if (info.removeTeacher) {
+            client.send(JSON.stringify({removeTeacher: info.removeTeacher}))
+          }
+
           if (info.studentEmail) {
             client.send(JSON.stringify({ studentEmail: info.studentEmail, studentName: info.studentName}))
             // sendStudentEmail(info.studentEmail, ws, client);
@@ -123,6 +127,20 @@ const openNewWebsocket = (server) => {
 
           if (info.playIncorrectSound) {
             ws.send(JSON.stringify(info));
+          }
+
+          if (info.leaveGame) {
+            ws.send(JSON.stringify(info));
+            client.send(JSON.stringify(info))
+          }
+
+          if (info.banList) {
+            console.log("banlist: ",info.banList)
+            client.send(JSON.stringify(info))
+          }
+
+          if (info.endGame) {
+            client.send(JSON.stringify(info))
           }
         }
       });

@@ -367,6 +367,11 @@ body {
   padding: 0.5rem;
 }
 
+#studentNamesList > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
 #studentEmailsHeader {
   color: black;
   /* text-align: center; */

@@ -55,6 +55,7 @@ export async function buildTeacherLobby(className, categoriesArray) {
 
   document.getElementById("mainContent").before(enableSoundsBtn);
 
+  sessionStorage.teacherJudgesResponses = "false"
   //! ------------- functions ---------------------
 
 function selectTypeOrJudge() {
@@ -62,6 +63,14 @@ function selectTypeOrJudge() {
 
     console.log(studentsTypeOrTeacherJudgesCheckbox.checked)
 
-    sessionStorage.teacherJudges = studentsTypeOrTeacherJudgesCheckbox.checked;
+    sessionStorage.teacherJudgesResponses = studentsTypeOrTeacherJudgesCheckbox.checked;
+
+      //     socket.send(
+      //   JSON.stringify({
+      //     correctAnswer: responseInputField.value,
+      //     playerName: sessionStorage.email,
+      //     score: score
+      //   })
+      // );
   }
 }
