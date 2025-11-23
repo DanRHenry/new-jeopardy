@@ -4,6 +4,7 @@ import { titleScreen } from "../titleScreen.js";
 import { serverURL } from "../serverURL.js";
 
 export async function login(email, password, role, studentName, teacherName, studentWebsocket) {
+  console.log("logging in...")
   try {
     const formBody = JSON.stringify({
       email: email,
@@ -23,27 +24,28 @@ export async function login(email, password, role, studentName, teacherName, stu
     if (res.message === "Login successful!") 
       {
       if (res.user.role === "teacher") {
-        console.log(res.token);
+        // console.log(res.token);
         sessionStorage.email = email;
         sessionStorage.token = res.token;
         sessionStorage.role = role;
-        console.log("role: ", role);
+        // console.log("role: ", role);
 
         createGame();
-      } else if (res.user.role === "student") {
-        console.log(res.token);
-        sessionStorage.email = email;
-        sessionStorage.token = res.token;
+      } else {
+        console.log("role: student")
+        // console.log(res.token);
+        // sessionStorage.email = email;
+        // sessionStorage.token = res.token;
         sessionStorage.role = role;
         sessionStorage.studentName = studentName;
         console.log("role: ", role);
 
-          const emailObj = JSON.stringify({
-          studentEmail: email,
-          studentName: studentName
-        });
-            console.log("sending email to everyone",emailObj)
-          studentWebsocket.send(emailObj);
+        //   const emailObj = JSON.stringify({
+        //   studentEmail: email,
+        //   studentName: studentName
+        // });
+            // console.log("sending email to everyone",emailObj)
+          // studentWebsocket.send(emailObj);
 
         joinGame(studentWebsocket);
       }

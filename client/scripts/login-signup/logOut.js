@@ -1,10 +1,11 @@
 export function logOut(socket) {
   if (sessionStorage.role === "student") {
+    console.log("role === student")
     socket.send(
       JSON.stringify({
         leaveGame: true,
         studentName: sessionStorage.studentName,
-        studentEmail: sessionStorage.email,
+        studentID: sessionStorage.studentID,
       })
     );
   }

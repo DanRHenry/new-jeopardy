@@ -8,6 +8,8 @@ const { sendClassName } = require("./sendClassName");
 // import {sendClassName} from "./sendClassName.js";
 const { sendCategoriesArray } = require("./sendCategoriesArray");
 // import {sendCategoriesArray} from "./sendCategoriesArray.js";
+const { randomUUID } = require('crypto');
+
 
 const openNewWebsocket = (server) => {
   const WebSocket = require("ws");
@@ -17,11 +19,11 @@ const openNewWebsocket = (server) => {
     ws.isAlive = true;
     ws.on("pong", () => {
       ws.isAlive = true;
-    })
+    });
 
     ws.on("error", console.error);
 
-/*     const interval = setInterval(() => {
+    /*     const interval = setInterval(() => {
       wss.clients.forEach((ws) => {
         // console.log("alivestatus: ",ws.isAlive)
         // if (ws.isAlive === false) {
@@ -39,37 +41,77 @@ const openNewWebsocket = (server) => {
 
     ws.on("message", function message(data) {
       if (JSON.parse(data).closeWebsocket) {
-            console.log("close websocket received")
-            ws.send(JSON.stringify({message: "terminating websocket"}))
-            ws.close()
-            // clearInterval(interval)
-
+        // console.log("close websocket received")
+        ws.send(JSON.stringify({ message: "terminating websocket" }));
+        ws.close();
+        // clearInterval(interval)
       }
+
+      const info = JSON.parse(data);
+
+      // console.log("(line 50)message: ", JSON.parse(data));
+
+      if (info.studentIDRequest) {
+        const randomID = randomUUID();
+        console.log("id request received, sending reply")
+        console.log(randomID)
+        ws.send(JSON.stringify({studentIDResponse: randomID}))
+      }
+
       wss.clients.forEach(function each(client) {
-        client.send(JSON.stringify({ WelcomeMessage: "WelcomeMessage" }));
+        // client.send(JSON.stringify({ WelcomeMessage: "WelcomeMessage" }));
         if (client !== ws && client.readyState === WebSocket.OPEN) {
           client.send(JSON.stringify({ "data: ": "Hello" }));
           const info = JSON.parse(data);
 
-          console.log("info received: ",info)
+          // console.log("info received: ", info);
 
-          if (info.teacherEmail) {
+          if (info.studentID && info.studentName) {
+            client.send(JSON.stringify(info))
+            ws.send(JSON.stringify(info))
+          }
+
+          if (info.studentID && !info.changedTeacherList) {
+            client.send(JSON.stringify({ info }));
+            ws.send(JSON.stringify({ info }));
+          }
+
+          if (info.changedTeacherList) {
+            client.send(JSON.stringify({ info }));
+            ws.send(JSON.stringify({ info }));
+          }
+
+          if (info.teacherEmail && !info.studentID) {
             ws.send(
               JSON.stringify({ message: "your teacherEmail has been received" })
+              // JSON.stringify({ teacherEmail: info.teacherEmail, className: info.className })
             );
-            client.send(JSON.stringify({ teacherEmail: info.teacherEmail }));
+            client.send(
+              JSON.stringify({
+                teacherEmail: info.teacherEmail,
+                className: info.className,
+              })
+            );
           }
 
           if (info.removeTeacher) {
-            client.send(JSON.stringify({removeTeacher: info.removeTeacher}))
+            client.send(JSON.stringify({ removeTeacher: info.removeTeacher }));
           }
 
-          if (info.studentEmail) {
-            client.send(JSON.stringify({ studentEmail: info.studentEmail, studentName: info.studentName}))
+          if (info.studentName) {
+            console.log("student name received: ", info);
+            client.send(
+              JSON.stringify(info)
+              // JSON.stringify({
+              //   studentName: info.studentName,
+              //   teacherEmail: info.teacherEmail,
+              //   className: info.className,
+              // })
+            );
             // sendStudentEmail(info.studentEmail, ws, client);
           }
 
-          if (info.className) {
+          if (info.className && !info.studentID) {
             ws.send(
               JSON.stringify({ message: "the className has been received" })
             );
@@ -79,14 +121,20 @@ const openNewWebsocket = (server) => {
           }
 
           if (info.categoriesArray) {
-          ws.send(JSON.stringify({ message: "your categoriesArray has been received" }));
-                
-    client.send(JSON.stringify({ categoriesArray: info.categoriesArray}))
+            ws.send(
+              JSON.stringify({
+                message: "your categoriesArray has been received",
+              })
+            );
+
+            client.send(
+              JSON.stringify({ categoriesArray: info.categoriesArray })
+            );
             // sendCategoriesArray(info.categoriesArray, ws, client);
           }
 
           if (info.squareClicked) {
-            console.log("clicked square: ", info.squareClicked);
+            // console.log("clicked square: ", info.squareClicked);
             ws.send(JSON.stringify({ squareClicked: info.squareClicked }));
             client.send(JSON.stringify({ squareClicked: info.squareClicked }));
           }
@@ -116,7 +164,7 @@ const openNewWebsocket = (server) => {
           }
 
           if (info.showResponse) {
-            console.log("info: ", info);
+            // console.log("info: ", info);
             client.send(JSON.stringify(info));
             ws.send(JSON.stringify(info));
           }
@@ -130,24 +178,25 @@ const openNewWebsocket = (server) => {
           }
 
           if (info.leaveGame) {
+            console.log("leave game request received", info)
             ws.send(JSON.stringify(info));
-            client.send(JSON.stringify(info))
+            client.send(JSON.stringify(info));
           }
 
           if (info.banList) {
-            console.log("banlist: ",info.banList)
-            client.send(JSON.stringify(info))
+            // console.log("banlist: ",info.banList)
+            client.send(JSON.stringify(info));
           }
 
           if (info.endGame) {
-            client.send(JSON.stringify(info))
+            client.send(JSON.stringify(info));
           }
         }
       });
     });
     wss.on("close", () => {
       // clearInterval(interval)
-    })
+    });
   });
 };
 

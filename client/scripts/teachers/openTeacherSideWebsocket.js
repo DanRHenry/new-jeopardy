@@ -14,14 +14,14 @@ export function openTeacherSideWebsocket(
 ) {
   const socket = new WebSocket(websocketURL);
 
-  const emailObj = JSON.stringify({ teacherEmail: email });
+  const teacherAndClassObject = JSON.stringify({
+    teacherEmail: email,
+    className: className,
+  });
 
   socket.addEventListener("open", function (event) {
-    console.log("teacher socket opened");
-
-    socket.send(emailObj);
-
-    sendEmailClassNameGameNameandCategories();
+    console.log("opened... sending teacherAndClassObject...");
+    socket.send(teacherAndClassObject);
 
     socket.addEventListener("message", function (message) {
       // console.log("received: ", message.data);
@@ -31,121 +31,37 @@ export function openTeacherSideWebsocket(
 
       const data = JSON.parse(message.data);
 
-      if (data.studentEmail) {
-        console.log("student email received: ", data.studentEmail);
+      // console.log("data received: ",data)
+      if (data.studentName && !data.studentID) {
+        console.log(
+          "received student name only, sending teacherAndClassObject..."
+        );
+        socket.send(teacherAndClassObject);
+      }
 
-        sendEmailClassNameGameNameandCategories();
-
-        let studentList = JSON.parse(sessionStorage.studentList);
-        console.log(studentList, typeof studentList);
-        console.log(data);
-        if (!studentList.studentEmails.includes(data.studentEmail)) {
-          studentList.studentNames.push(data.studentName);
-          studentList.studentEmails.push(data.studentEmail);
-
-          sessionStorage.studentList = JSON.stringify(studentList);
-
-          const studentNameRow = document.createElement("div");
-          // studentNameRow.innerText = data.studentName;
-          studentNameRow.id = data.studentEmail;
-          // document.getElementById
-          studentNameRow.className = "studentDisplayNames";
-
-          const studentDisplayName = document.createElement("div");
-          studentDisplayName.innerText = data.studentName;
-
-          const removeStudentCheckbox = document.createElement("input");
-          removeStudentCheckbox.type = "checkbox";
-          removeStudentCheckbox.className = "removeStudentCheckboxes";
-
-          removeStudentCheckbox.addEventListener("click", () => {
-            studentDisplayName.style.textDecoration =
-              removeStudentCheckbox.checked === true ? "line-through" : null;
-          });
-
-          studentNameRow.append(studentDisplayName, removeStudentCheckbox);
-
-          document.getElementById("studentNamesList").append(studentNameRow);
-
-          if (!document.getElementById("beginGameBtn")) {
-            const beginGameBtn = document.createElement("button");
-            beginGameBtn.id = "beginGameBtn";
-            beginGameBtn.innerText = "Begin Game";
-
-            beginGameBtn.addEventListener("click", () => {
-              const banList = [];
-              const studentDisplayNames = document.getElementsByClassName(
-                "studentDisplayNames"
-              );
-              for (let i = 0; i < studentDisplayNames.length; i++) {
-                console.log(studentDisplayNames[i]);
-                if (
-                  document.getElementsByClassName("removeStudentCheckboxes")[i]
-                    .checked
-                ) {
-                  studentDisplayNames[i].style.textDecoration ===
-                    "line-through";
-                  banList.push(studentDisplayNames[i].id);
-                }
-              }
-
-              socket.send(JSON.stringify({ banList: banList }));
-
-              const studentList = JSON.parse(sessionStorage.studentList);
-
-              for (let i = 0; i < banList.length; i++) {
-                console.log(banList[i]);
-                let index = studentList.studentEmails.indexOf(banList[i]);
-
-                studentList.studentNames.splice(index, 1);
-                studentList.studentEmails.splice(index, 1);
-
-                sessionStorage.studentList = JSON.stringify(studentList);
-              }
-
-              if (studentList.studentNames.length > 0) {
-                socket.send(
-                  JSON.stringify({
-                    cueToStart: "true",
-                    className: className,
-                    gameName: gameNameInput,
-                    teacherJudgesResponses: sessionStorage.teacherJudgesResponses
-                  })
-                );
-                console.log("beginning game...");
-                beginGame(categoriesArray, socket, className, gameNameInput);
-              }
-            });
-
-            const backBtn = document.createElement("button");
-            backBtn.id = "backBtn";
-            backBtn.innerText = "Back";
-
-            backBtn.addEventListener("click", () => {
-              sessionStorage.removeItem("gameName");
-              sessionStorage.removeItem("categoriesArray");
-              sessionStorage.removeItem("studentList");
-              console.log("sending close socket");
-              const closesocketobject = JSON.stringify({
-                closeWebsocket: "true",
-              });
-              socket.send(JSON.stringify({ removeTeacher: true }));
-              socket.send(closesocketobject);
-              console.log("sent", closesocketobject);
-
-              socket.close();
-              createGame();
-            });
-
-            const btnRow = document.createElement("div");
-            btnRow.id = "btnRow";
-
-            btnRow.append(backBtn, beginGameBtn);
-            document.getElementById("studentEmailsHeader").before(btnRow);
-          }
+      if (data.studentID && !data.className) {
+        // console.log("student data received: ", data);
+        if (
+          data.changedTeacherList &&
+          data.teacherEmail === sessionStorage.email
+        ) {
+          console.log("match: ", data.teacherEmail, sessionStorage.email);
+          sendEmailClassNameGameNameandCategories(
+            data,
+            dothethingandsortitoutlater(data)
+          );
+        } else {
+          sendEmailClassNameGameNameandCategories(
+            data,
+            dothethingandsortitoutlater(data)
+          );
+          const studentDisplayNames = document.getElementsByClassName(
+            "studentDisplayNames"
+          );
         }
       }
 
+      //! ------------------------------- Gameplay Listeners ----------------------------
       if (data.squareClicked) {
         handleClickedSquare(data, socket);
       }
@@ -157,25 +73,27 @@ export function openTeacherSideWebsocket(
         ).innerText = `${data.buzzIn} is answering...`;
         document.getElementById("buzzInBtn")?.remove();
 
-      if (sessionStorage.teacherJudgesResponses === "true") {
-        const correctIncorrectBtnsLine = document.createElement("div");
-        correctIncorrectBtnsLine.id = "correctIncorrectBtnsLine";
+        if (sessionStorage.teacherJudgesResponses === "true") {
+          const correctIncorrectBtnsLine = document.createElement("div");
+          correctIncorrectBtnsLine.id = "correctIncorrectBtnsLine";
 
-        const correctBtn = document.createElement("button");
-        correctBtn.innerText = "Correct";
-        correctBtn.addEventListener("click", () =>
-          handleCorrectAnswer ("", data.buzzIn, 0)
-        );
+          const correctBtn = document.createElement("button");
+          correctBtn.innerText = "Correct";
+          correctBtn.addEventListener("click", () =>
+            handleCorrectAnswer("", data.buzzIn, 0)
+          );
 
-        const incorrectBtn = document.createElement("button");
-        incorrectBtn.innerText = "Incorrect";
-        incorrectBtn.addEventListener("click", () =>
-          console.log("incorrect clicked")
-        );
+          const incorrectBtn = document.createElement("button");
+          incorrectBtn.innerText = "Incorrect";
+          incorrectBtn.addEventListener("click", () =>
+            console.log("incorrect clicked")
+          );
 
-        correctIncorrectBtnsLine.append(incorrectBtn, correctBtn);
-        document.getElementById("studentAnswering").after(correctIncorrectBtnsLine);
-      }
+          correctIncorrectBtnsLine.append(incorrectBtn, correctBtn);
+          document
+            .getElementById("studentAnswering")
+            .after(correctIncorrectBtnsLine);
+        }
       }
 
       if (data.correctAnswer) {
@@ -275,14 +193,14 @@ export function openTeacherSideWebsocket(
 
       if (data.leaveGame) {
         console.log("student leaving", data.studentName);
-        document.getElementById(data.studentEmail)?.remove();
+        document.getElementById(data.studentID)?.remove();
         const studentList = JSON.parse(sessionStorage.studentList);
 
-        const index = studentList.studentEmails.indexOf(data.studentEmail);
-
-        studentList.studentEmails.splice(index, 1);
-
-        studentList.studentNames.splice(index, 1);
+        for (let i = 0; i < studentList.length; i++) {
+          if (studentList[i].studentID === data.studentID) {
+            studentList.splice(i, 1);
+          }
+        }
 
         sessionStorage.studentList = JSON.stringify(studentList);
 
@@ -349,27 +267,182 @@ export function openTeacherSideWebsocket(
     }
   }
 
-  function sendEmailClassNameGameNameandCategories() {
-    socket.send(emailObj);
-    socket.send(
-      JSON.stringify({ className: className, gameName: gameNameInput})
-    );
-    socket.send(JSON.stringify({ categoriesArray: categoriesArray }));
+  function sendEmailClassNameGameNameandCategories(data, studentID) {
+    // console.log("sending: ", JSON.parse(teacherAndClassObject));
+    if (studentID) {
+      if (data.teacherEmail && data.teacherEmail === sessionStorage.email) {
+        socket.send(
+          JSON.stringify({
+            className: className,
+            gameName: gameNameInput,
+            studentID: studentID,
+            teacherEmail: data.teacherEmail,
+            categoriesArray: categoriesArray,
+          })
+        );
+      }
+    } else {
+      socket.send(teacherAndClassObject);
+    }
+    // socket.send(JSON.stringify({ categoriesArray: categoriesArray }));
   }
 
-  function handleCorrectAnswer (correctAnswer, playerName, score) {
-          console.log("correct");
-          console.log(correctAnswer)
-          console.log(playerName)
-          console.log(score)
-      socket.send(
-        JSON.stringify({
-          correctAnswer: correctAnswer,
-          playerName: playerName,
-          score: score
-        })
-      );
+  function handleCorrectAnswer(correctAnswer, playerName, score) {
+    console.log("correct");
+    console.log(correctAnswer);
+    console.log(playerName);
+    console.log(score);
+    socket.send(
+      JSON.stringify({
+        correctAnswer: correctAnswer,
+        playerName: playerName,
+        score: score,
+      })
+    );
 
-      // socket.send(JSON.stringify({playCorrectSound: true}))
+    // socket.send(JSON.stringify({playCorrectSound: true}))
+  }
+
+  function dothethingandsortitoutlater(data) {
+    let studentList = JSON.parse(sessionStorage.studentList);
+
+    const studentIDExists = checkStudentListForExistingID(
+      studentList,
+      data.studentID
+    );
+
+    function checkStudentListForExistingID(studentList, ID) {
+      let flag = false;
+      for (let i = 0; i < studentList.length; i++) {
+        if (studentList[i].studentID === ID) {
+          flag = true;
+          break;
+        }
+      }
+      return flag;
+    }
+
+    if (!studentIDExists) {
+      studentList.push(data);
+    }
+    sessionStorage.studentList = JSON.stringify(studentList);
+
+    if (!studentIDExists) {
+      sessionStorage.studentList = JSON.stringify(studentList);
+
+      const studentNameRow = document.createElement("div");
+
+      studentNameRow.className = "studentDisplayNames";
+      studentNameRow.id = data.studentID;
+
+      const studentDisplayName = document.createElement("div");
+      let nameIndex = 0
+      let studentName = data.studentName
+      for (let i = 0; i < studentList.length; i++) {
+        if (studentList[i].studentName === data.studentName) {
+          nameIndex++
+        }
+      }
+      if (nameIndex > 1) {
+        if (nameIndex % 10 === 2) {
+                  studentName = data.studentName + " the " + nameIndex+"nd"
+        } else if (nameIndex % 10 === 3) {
+                  studentName = data.studentName + " the " + nameIndex+"rd"
+        } else {
+          studentName = data.studentName + " the " + nameIndex + "th"
+        }
+      }
+      studentDisplayName.innerText = studentName;
+
+      const removeStudentCheckbox = document.createElement("input");
+      removeStudentCheckbox.type = "checkbox";
+      removeStudentCheckbox.className = "removeStudentCheckboxes";
+
+      removeStudentCheckbox.addEventListener("click", () => {
+        studentDisplayName.style.textDecoration =
+          removeStudentCheckbox.checked === true ? "line-through" : null;
+      });
+
+      studentNameRow.append(studentDisplayName, removeStudentCheckbox);
+
+      document.getElementById("studentNamesList").append(studentNameRow);
+
+      if (!document.getElementById("beginGameBtn")) {
+        const beginGameBtn = document.createElement("button");
+        beginGameBtn.id = "beginGameBtn";
+        beginGameBtn.innerText = "Begin Game";
+
+        beginGameBtn.addEventListener("click", () => {
+          const banList = [];
+          const studentDisplayNames = document.getElementsByClassName(
+            "studentDisplayNames"
+          );
+          for (let i = 0; i < studentDisplayNames.length; i++) {
+            console.log(studentDisplayNames[i]);
+            if (
+              document.getElementsByClassName("removeStudentCheckboxes")[i]
+                .checked
+            ) {
+              studentDisplayNames[i].style.textDecoration === "line-through";
+              banList.push(studentDisplayNames[i].id);
+            }
+          }
+
+          socket.send(JSON.stringify({ banList: banList }));
+
+          const studentList = JSON.parse(sessionStorage.studentList);
+
+          for (let i = 0; i < banList.length; i++) {
+            console.log(banList[i]);
+            let index = studentList.studentEmails.indexOf(banList[i]);
+
+            studentList.studentNames.splice(index, 1);
+            studentList.studentEmails.splice(index, 1);
+
+            sessionStorage.studentList = JSON.stringify(studentList);
+          }
+
+          if (studentList.studentNames.length > 0) {
+            socket.send(
+              JSON.stringify({
+                cueToStart: "true",
+                className: className,
+                gameName: gameNameInput,
+                teacherJudgesResponses: sessionStorage.teacherJudgesResponses,
+              })
+            );
+            console.log("beginning game...");
+            beginGame(categoriesArray, socket, className, gameNameInput);
+          }
+        });
+
+        const backBtn = document.createElement("button");
+        backBtn.id = "backBtn";
+        backBtn.innerText = "Back";
+
+        backBtn.addEventListener("click", () => {
+          sessionStorage.removeItem("gameName");
+          sessionStorage.removeItem("categoriesArray");
+          sessionStorage.removeItem("studentList");
+          console.log("sending close socket");
+          const closesocketobject = JSON.stringify({
+            closeWebsocket: "true",
+          });
+          socket.send(JSON.stringify({ removeTeacher: true }));
+          socket.send(closesocketobject);
+          console.log("sent", closesocketobject);
+
+          socket.close();
+          createGame();
+        });
+
+        const btnRow = document.createElement("div");
+        btnRow.id = "btnRow";
+
+        btnRow.append(backBtn, beginGameBtn);
+        document.getElementById("studentEmailsHeader").before(btnRow);
+      }
+    }
+    // return studentID;
   }
 }

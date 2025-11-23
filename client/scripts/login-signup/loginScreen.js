@@ -1,3 +1,4 @@
+import { joinGame } from "../students/joinGame.js";
 import { signup } from "./signup.js";
 
 export async function loginScreen(role, studentWebsocket) {
@@ -17,17 +18,17 @@ export async function loginScreen(role, studentWebsocket) {
       signup(this.email.value, this.password.value, role);
     }
 
-    console.log("role: ", role)
-    if (role === "student") {
-      signup(
-        this.email.value,
-        this.password.value,
-        role,
-        this.studentNameInput.value,
-        "teachername placeholder",
-        studentWebsocket
-      );
-    }
+    // console.log("role: ", role)
+    // if (role === "student") {
+    //   signup(
+    //     this.email.value,
+    //     this.password.value,
+    //     role,
+    //     this.studentNameInput.value,
+    //     "teachername placeholder",
+    //     studentWebsocket
+    //   );
+    // }
   };
 
   const loginFormEmailInput = document.createElement("input");
@@ -48,18 +49,34 @@ export async function loginScreen(role, studentWebsocket) {
   loginBtn.innerText = "Submit";
 
   if (role === "student") {
+    sessionStorage.role = "student"
     const nameInput = document.createElement("input");
     nameInput.id = "studentNameInput";
     nameInput.name = "studentNameInput";
     nameInput.placeholder = "screen name";
+    
+    const submitBtn = document.createElement("button")
+    submitBtn.type = "submit"
+    submitBtn.innerText = "Submit"
 
-    const emailAndPasswordLine = document.createElement("div");
-    emailAndPasswordLine.id = "emailAndPasswordLine";
+    submitBtn.addEventListener("click", () => {
+      sessionStorage.studentName = nameInput.value;
+      console.log("studentName: ", sessionStorage.studentName)
+        if (sessionStorage.teacherEmails) {
+    studentWebsocket.send(JSON.stringify({studentName: sessionStorage.studentName, studentID: sessionStorage.studentID}))
+  }
+      joinGame(studentWebsocket)
 
-    emailAndPasswordLine.append(loginFormEmailInput, loginFormPasswordInput);
+    })
 
-    loginForm.append(nameInput, emailAndPasswordLine, loginBtn);
+    // const emailAndPasswordLine = document.createElement("div");
+    // emailAndPasswordLine.id = "emailAndPasswordLine";
 
+    // emailAndPasswordLine.append(loginFormEmailInput, loginFormPasswordInput);
+
+    // loginForm.append(nameInput, emailAndPasswordLine, loginBtn);
+
+    loginForm.append(nameInput, submitBtn)
     loginScreenContent.append(loginForm);
     mainContent.append(loginScreenContent);
   } else {

@@ -94,7 +94,7 @@ startGameBtn.addEventListener("click", () => {
   // console.log("questions & answers: ", availableCategoriesArray);
 
   // console.log("className: ",className)
-  console.log("gameName: ",gameNameInput)
+  // console.log("gameName: ",gameNameInput)
   sessionStorage.categoriesArray = JSON.stringify(availableCategoriesArray);
   sessionStorage.className = className.innerText;
   sessionStorage.gameName = gameNameInput;
