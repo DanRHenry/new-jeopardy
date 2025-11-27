@@ -61,10 +61,11 @@ export async function loginScreen(role, studentWebsocket) {
 
     submitBtn.addEventListener("click", () => {
       sessionStorage.studentName = nameInput.value;
-      console.log("studentName: ", sessionStorage.studentName)
-        if (sessionStorage.teacherEmails) {
-    studentWebsocket.send(JSON.stringify({studentName: sessionStorage.studentName, studentID: sessionStorage.studentID}))
-  }
+      // console.log("studentName: ", sessionStorage.studentName)
+        // if (sessionStorage.teacherEmails) {
+          console.log("name submitting, sending name and ID: ", sessionStorage.studentName," & ", sessionStorage.studentID)
+    studentWebsocket.send(JSON.stringify({studentInformation: true, studentName: sessionStorage.studentName, studentID: sessionStorage.studentID}))
+  // }
       joinGame(studentWebsocket)
 
     })

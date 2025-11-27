@@ -26,167 +26,164 @@ export function openStudentSideWebsocket() {
         }
 
         const data = JSON.parse(message.data);
-        console.log("data: ", data);
+        // console.log("data: ", data);
 
         //! -------------- Receive unique student ID
         if (data.studentIDResponse) {
           sessionStorage.studentID = data.studentIDResponse;
+
+          // ------------ send request for teacher information
+          socket.send(JSON.stringify({
+            requestTeacherInfo: true,
+            studentID: sessionStorage.studentID,
+            studentName: sessionStorage.studentName
+          }))
         }
 
+        
         //-----------------------------------------------
 
-        if (data.teacherEmail && !data.className) {
-          console.log("no class name but received teacher email: ", data)
-              studentObj.studentID = sessionStorage.studentID;
-              studentObj.studentName = sessionStorage.studentName;
-              // alert(`Student Object: ${JSON.stringify(studentObj)}`)
+        if (data.teacherInformation) {
+          let teachers
+          if (sessionStorage.teachers) teachers = JSON.parse(sessionStorage.teachers)
+            else {teachers = {}}
 
-              socket.send(JSON.stringify(studentObj)); //todo change this to an event listener that sends student name, class, and teacher
-              console.log("teacher email received without classname. sent student information")
-              console.log("studentObj: ", studentObj)
-        }
+          if (!teachers[data.teacherEmail]) {
+            socket.send(JSON.stringify({
+            studentInformation: true,
+            studentID: sessionStorage.studentID,
+            studentName: sessionStorage.studentName
+          }))
 
-        if (data.teacherEmail && data.className) {
-          console.log("teacher email received: ", data);
-          const teacherEmailsStored =
-            sessionStorage.getItem("teacherEmails") || [];
-          console.log("currentTeacherEmails", teacherEmailsStored);
+          teachers[data.teacherEmail] = {
+            className: data.className,
+            gameName: data.gameName,
+            categoriesArray: data.categoriesArray
+          }
 
-          if (
-            !teacherEmailsStored.includes(
-              JSON.stringify({
-                teacherEmail: data.teacherEmail,
-                className: data.className,
-              })
-            )
-          ) {
-            console.log(data.teacherEmail, " received");
-
-            //! ----------- Update Session Storage Teacher Emails Array
-            if (!sessionStorage.teacherEmails) {
-              sessionStorage.teacherEmails = JSON.stringify([]);
-            }
-
-            if (sessionStorage.teacherEmails) {
-              const previousTeacherEmails = JSON.parse(
-                sessionStorage.teacherEmails
-              );
-
-              previousTeacherEmails.push(data);
-
-              sessionStorage.teacherEmails = JSON.stringify(
-                previousTeacherEmails
-              );
-
-              //! ------------- Add New Teacher Email to Student User Interface
-
-              // let teacherList = document.getElementById("teacherList");
-              // teacherList?.removeEventListener(
-              //   "change",
-              //   handleTeacherListSelectionChange
-              // );
-
-              // teacherList?.remove()
-
-              // teacherList = document.createElement("select");
-              // teacherList.id = "teacherList";
-              // teacherList.name = "teacherList";
-
-              // teacherList.addEventListener(
-              //   "change",
-              //   handleTeacherListSelectionChange
-              // );
-
-              document.getElementById("placeholderOption")?.remove()
-
-              const teacherEmails = JSON.parse(sessionStorage.teacherEmails);
-
-              console.log(typeof teacherEmails, teacherEmails);
-
-              for (let i = 0; i < teacherEmails.length; i++) {}
-
-              const teacherOption = document.createElement("option");
-              teacherOption.value = data.teacherEmail;
-              teacherOption.innerText = data.teacherEmail;
-
-              if (teacherList) {
-                if (document.getElementById("placeholderOption")) {
-                  document.getElementById("placeholderOption").remove();
-                }
-
-                teacherList.append(teacherOption);
-
-                for (let i = 0; i < previousTeacherEmails.length; i++) {
-                  if (
-                    previousTeacherEmails[i].teacherEmail === teacherList.value
-                  ) {
-                    document.getElementById("classList").innerText =
-                      previousTeacherEmails[i].className;
-                  }
-                }
-              }
-
-              studentObj.studentID = sessionStorage.studentID;
-              studentObj.studentName = sessionStorage.studentName;
-              // alert(`Student Object: ${JSON.stringify(studentObj)}`)
-              console.log("sending student object, ", JSON.stringify(studentObj))
-              socket.send(JSON.stringify(studentObj)); //todo change this to an event listener that sends student name, class, and teacher
-            }
+          sessionStorage.teachers = JSON.stringify(teachers)
           }
         }
 
-        if (data.removeTeacher) {
-          const existingTeacherOptionsList =
-            document.querySelectorAll("option");
-          console.log("removing teacher: ", data, "from: ");
-          console.table(existingTeacherOptionsList);
 
-          for (let i = 0; i < existingTeacherOptionsList.length; i++) {
-            //todo - check this to see if it will work as expected or will create bugs
-            if (
-              existingTeacherOptionsList[i].value ===
-              sessionStorage.teacherEmails[i].teacherEmail
-            ) {
-              existingTeacherOptionsList[i].remove();
-            }
-          }
-          sessionStorage.removeItem("teacherEmail");
-        }
+//-----------------------------------------------------------
+        // if (data.teacherEmail && !data.className) {
+        //   console.log("no class name but received teacher email: ", data);
+        //   studentObj.studentID = sessionStorage.studentID;
+        //   studentObj.studentName = sessionStorage.studentName;
 
-        // if (data.studentID) {
-        //   socket.send(
-        //     JSON.stringify({
-        //       studentName: sessionStorage.studentName,
-        //       studentID: studentID,
-        //     })
-        //   ); //todo change this to an event listener that sends student name, class, and teacher
-        //   console.log("sending id: ", studentID, "for", studentName);
+        //   socket.send(JSON.stringify(studentObj));
         // }
 
-        if (data.removeStudent) {
-          console.log("remove request received");
-        }
+        // let teacherObjects;
+        // if (data.teacherEmail && data.className) {
+        //   if (sessionStorage.teacherObjects) {
+        //     teacherObjects = JSON.parse(sessionStorage.teacherObjects);
+        //   } else teacherObjects = {};
 
-        // if (data.className) {
-        //   console.log(data)
-        //     const previousClassNames = sessionStorage.classNames || []
-        //     previousClassNames.push(data.className)
-        //     sessionStorage.classNames = JSON.stringify(previousClassNames)
+        //   teacherObjects[data.teacherEmail] = {
+        //     className: data.className,
+        //     gameName: data.gameName,
+        //     categories: data.categoriesArray,
+        //   };
 
-        //     const classOption = document.createElement("div")
-        //     classOption.value = data.className;
-        //     classOption.innerText = data.className;
+        //   sessionStorage.teacherObjects = JSON.stringify(teacherObjects);
+        //   sessionStorage.teacher = data.teacherEmail;
 
-        //     const classList = document.getElementById("classList");
-        //     if (classList) {
-        //       classList.append(classOption);
+
+        //   //! ------------- Add New Teacher Email to Student User Interface
+
+        //   let teacherList = document.getElementById("teacherList");
+
+        //   document.getElementById("placeholderOption")?.remove();
+
+        //   console.log("data: ", data);
+        //   if (data.categoriesArray) {
+        //     console.log("incoming categories: ", data.categoriesArray);
+        //     let teacherObjects = {}
+
+        //     if (sessionStorage.teacherObjects) {
+        //       teacherObjects = Array.from(
+        //         JSON.parse(sessionStorage.teacherObjects)
+        //       );
         //     }
 
+        //     console.log("teacherObjects: ",teacherObjects)
+
+        //     for (let object of teacherObjects) {
+        //       console.table(object)
+        //     }
+        //   }
+
+        //   const teacherOption = document.createElement("option");
+        //   teacherOption.value = data.teacherEmail;
+        //   teacherOption.innerText = data.teacherEmail;
+
+        //   if (teacherList) {
+        //     if (document.getElementById("placeholderOption")) {
+        //       document.getElementById("placeholderOption").remove();
+        //     }
+
+        //     teacherList.append(teacherOption);
+
+        //               if (sessionStorage.teacherObjects[data.teacherEmail]) {
+
+        //     console.log("----------------")
+        //     console.log(data.teacherEmail)
+        //     console.log(sessionStorage.teacherObjects)
+        //     console.log(sessionStorage.teacherObjects[data.teacherEmail])
+
+        //     document.getElementById("classList").innerText = sessionStorage.teacherObjects[data.teacherEmail].className;
+
+
+
+        //     // for (let i = 0; i < previousTeacherEmails.length; i++) {
+        //     //   if (previousTeacherEmails[i].teacherEmail === teacherList.value) {
+        //     //     document.getElementById("classList").innerText =
+        //     //       previousTeacherEmails[i].className;
+        //     //   }
+        //     // }
+        //   }
+
+        //   studentObj.studentID = sessionStorage.studentID;
+        //   studentObj.studentName = sessionStorage.studentName;
+        //   // alert(`Student Object: ${JSON.stringify(studentObj)}`)
+        //   console.log("sending student object, ", JSON.stringify(studentObj));
+        //   socket.send(JSON.stringify(studentObj)); //todo change this to an event listener that sends student name, class, and teacher
+        //   // }
+        //   // }
+        //   }
         // }
 
-        if (data.categoriesArray) {
-          sessionStorage.categoriesArray = JSON.stringify(data.categoriesArray);
-        }
+        // if (data.removeTeacher) {
+        //   const existingTeacherOptionsList =
+        //     document.querySelectorAll("option");
+        //   console.log("removing teacher: ", data, "from: ");
+        //   console.table(existingTeacherOptionsList);
+
+        //   for (let i = 0; i < existingTeacherOptionsList.length; i++) {
+        //     //todo - check this to see if it will work as expected or will create bugs
+        //     if (
+        //       existingTeacherOptionsList[i].value ===
+        //       sessionStorage.teacherEmails[i].teacherEmail
+        //     ) {
+        //       existingTeacherOptionsList[i].remove();
+        //     }
+        //   }
+        //   sessionStorage.removeItem("teacherEmail");
+        // }
+
+        // if (data.removeStudent) {
+        //   console.log("remove request received");
+        // }
+
+        // if (data.categoriesArray) {
+        //   console.log("incoming teacher data: ", data);
+        //   console.log("categoriesArray received: ", data.categoriesArray);
+        //   sessionStorage.categoriesArray = JSON.stringify(data.categoriesArray);
+        // }
+
+//-----------------------------------------------------------
 
         if (data.cueToStart) {
           sessionStorage.teacherJudgesResponses = JSON.stringify(

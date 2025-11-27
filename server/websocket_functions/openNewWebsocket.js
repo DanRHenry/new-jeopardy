@@ -66,72 +66,80 @@ const openNewWebsocket = (server) => {
 
           // console.log("info received: ", info);
 
-          if (info.studentID && info.studentName) {
-            client.send(JSON.stringify(info))
+          // if (info.studentID && info.studentName) {
+          //   client.send(JSON.stringify(info))
+          //   ws.send(JSON.stringify(info))
+          // }
+
+          // if (info.studentID && !info.changedTeacherList) {
+          //   client.send(JSON.stringify({ info }));
+          //   ws.send(JSON.stringify({ info }));
+          // }
+
+          if (info.teacherInformation) {
             ws.send(JSON.stringify(info))
+            client.send(JSON.stringify(info))
           }
 
-          if (info.studentID && !info.changedTeacherList) {
-            client.send(JSON.stringify({ info }));
-            ws.send(JSON.stringify({ info }));
+          if (info.studentInformation) {
+            ws.send(JSON.stringify(info))
+            client.send(JSON.stringify(info))
           }
 
-          if (info.changedTeacherList) {
-            client.send(JSON.stringify({ info }));
-            ws.send(JSON.stringify({ info }));
+          if (info.requestTeacherInfo) {
+            ws.send(JSON.stringify(info))
+            client.send(JSON.stringify(info))
           }
+          // if (info.changedTeacherList) {
+          //   client.send(JSON.stringify({ info }));
+          //   ws.send(JSON.stringify({ info }));
+          // }
 
-          if (info.teacherEmail && !info.studentID) {
-            ws.send(
-              JSON.stringify({ message: "your teacherEmail has been received" })
-              // JSON.stringify({ teacherEmail: info.teacherEmail, className: info.className })
-            );
-            client.send(
-              JSON.stringify({
-                teacherEmail: info.teacherEmail,
-                className: info.className,
-              })
-            );
-          }
+          // if (info.teacherEmail && !info.studentID) {
+          //   ws.send(
+          //     JSON.stringify({ message: "your teacherEmail has been received" })
+          //     // JSON.stringify({ teacherEmail: info.teacherEmail, className: info.className })
+          //   );
+          //   client.send(
+          //     JSON.stringify({
+          //       teacherEmail: info.teacherEmail,
+          //       className: info.className,
+          //     })
+          //   );
+          // }
 
           if (info.removeTeacher) {
             client.send(JSON.stringify({ removeTeacher: info.removeTeacher }));
           }
 
-          if (info.studentName) {
-            console.log("student name received: ", info);
-            client.send(
-              JSON.stringify(info)
-              // JSON.stringify({
-              //   studentName: info.studentName,
-              //   teacherEmail: info.teacherEmail,
-              //   className: info.className,
-              // })
-            );
-            // sendStudentEmail(info.studentEmail, ws, client);
-          }
+          // if (info.studentName) {
+          //   console.log("student name received: ", info);
+          //   client.send(
+          //     JSON.stringify(info)
+          //   );
+          // }
 
-          if (info.className && !info.studentID) {
-            ws.send(
-              JSON.stringify({ message: "the className has been received" })
-            );
+          // if (info.className && !info.studentID) {
+          //   ws.send(
+          //     JSON.stringify({ message: "the className has been received" })
+          //   );
 
-            client.send(JSON.stringify({ className: info.className }));
-            // sendClassName(info.className, ws, client);
-          }
+          //   client.send(JSON.stringify({ className: info.className }));
+          //   // sendClassName(info.className, ws, client);
+          // }
 
-          if (info.categoriesArray) {
-            ws.send(
-              JSON.stringify({
-                message: "your categoriesArray has been received",
-              })
-            );
+          // if (info.categoriesArray) {
+          //   ws.send(
+          //     JSON.stringify({
+          //       message: "your categoriesArray has been received",
+          //     })
+          //   );
 
-            client.send(
-              JSON.stringify({ categoriesArray: info.categoriesArray })
-            );
-            // sendCategoriesArray(info.categoriesArray, ws, client);
-          }
+          //   client.send(
+          //     JSON.stringify(info)
+          //   );
+          //   // sendCategoriesArray(info.categoriesArray, ws, client);
+          // }
 
           if (info.squareClicked) {
             // console.log("clicked square: ", info.squareClicked);
